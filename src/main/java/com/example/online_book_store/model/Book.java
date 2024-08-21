@@ -1,11 +1,10 @@
 package com.example.online_book_store.model;
 
-import org.hibernate.annotations.ManyToAny;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Book {
@@ -15,7 +14,7 @@ public class Book {
     private String title;
     private double price;
     private int stockQuantity;
-    @ManyToAny
+    @ManyToOne
     private Author author;
     public int getId() {
         return id;
