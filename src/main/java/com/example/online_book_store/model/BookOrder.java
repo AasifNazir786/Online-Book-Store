@@ -1,6 +1,6 @@
 package com.example.online_book_store.model;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -11,33 +11,37 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "book_orders")
-public class Order {
+public class BookOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int orderId;
+    private Date orderDate;
 
-    private LocalDate orderDate;
     @ManyToOne
     private Customer customer;
-
+    
     @ManyToMany
-    private List<Book> books;
+    private List<Book> book;
 
-    public int getId() {
-        return id;
+    public BookOrder() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public LocalDate getOrderDate() {
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public Date getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDate orderDate) {
+    public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -49,12 +53,12 @@ public class Order {
         this.customer = customer;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public List<Book> getBook() {
+        return book;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setBook(List<Book> book) {
+        this.book = book;
     }
     
 }

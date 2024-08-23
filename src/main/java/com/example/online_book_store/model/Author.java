@@ -7,41 +7,39 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
-public class Author{
-
+@Table(name = "authors")
+public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int authorId;
     private String authorName;
-    private String authorBio;
 
     @OneToMany(mappedBy = "author")
     private List<Book> books;
 
-    public int getId() {
-        return id;
-    }
+    public Author() {}
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public void setAuthorName(String authorName) {
+    public Author(String authorName) {
         this.authorName = authorName;
     }
 
-    public String getAuthorBio() {
-        return authorBio;
+    public int getId() {
+        return authorId;
     }
 
-    public void setAuthorBio(String authorBio) {
-        this.authorBio = authorBio;
+    public void setId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public String getName() {
+        return authorName;
+    }
+
+    public void setName(String name) {
+        this.authorName = name;
     }
 
     public List<Book> getBooks() {

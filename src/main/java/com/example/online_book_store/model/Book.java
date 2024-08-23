@@ -4,47 +4,63 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String title;
-    private double price;
-    private int stockQuantity;
+    private int bookId;
+    private String bookTitle;
+    private long bookStock;
+    private int bookPrice;
+
     @ManyToOne
+    @JoinColumn(name = "authorId", referencedColumnName = "authorId")
     private Author author;
-    public int getId() {
-        return id;
+
+    public Book() {}
+
+    public int getBookId() {
+        return bookId;
     }
-    public void setId(int id) {
-        this.id = id;
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
     }
-    public String getTitle() {
-        return title;
+
+    public String getBookTitle() {
+        return bookTitle;
     }
-    public void setTitle(String title) {
-        this.title = title;
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
-    public double getPrice() {
-        return price;
+
+    public long getBookStock() {
+        return bookStock;
     }
-    public void setPrice(double price) {
-        this.price = price;
+
+    public void setBookStock(long bookStock) {
+        this.bookStock = bookStock;
     }
-    public int getStockQuantity() {
-        return stockQuantity;
-    }
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
-    }
+
     public Author getAuthor() {
         return author;
     }
+
     public void setAuthor(Author author) {
         this.author = author;
     }
-    
+
+    public int getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(int bookPrice) {
+        this.bookPrice = bookPrice;
+    }
 }
