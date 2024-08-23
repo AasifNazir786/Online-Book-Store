@@ -19,7 +19,7 @@ public class Book {
     private int bookPrice;
 
     @ManyToOne
-    @JoinColumn(name = "authorId", referencedColumnName = "authorId")
+    @JoinColumn(name = "author_id", referencedColumnName = "authorId")
     private Author author;
 
     public Book() {}

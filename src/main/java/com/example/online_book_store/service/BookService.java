@@ -1,6 +1,5 @@
 package com.example.online_book_store.service;
 
-import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
 
 import java.util.List;
@@ -25,10 +24,10 @@ public class BookService{
         return book;
     }
 
-    public List<Book> getByAuthorName(Author author){
-        List<Book> books = bookRepository.findByAuthor(author);
-        return books;
-    }
+    // public List<Book> getByAuthorName(Author author){
+    //     List<Book> books = bookRepository.findByAuthorName(author);
+    //     return books;
+    // }
     public List<Book> getBooksByName(String name){
         List<Book> books = bookRepository.findByBookTitle(name);
         return books;
@@ -41,14 +40,12 @@ public class BookService{
 
     public Book updateBook(int id, Book newBook){
         Book existingBook = bookRepository.findById(id).orElse(null);
-        if(existingBook != null){
+        
             existingBook.setBookTitle(newBook.getBookTitle());
             existingBook.setBookStock(newBook.getBookStock());
             existingBook.setBookPrice(newBook.getBookPrice());
             existingBook.setAuthor(newBook.getAuthor());
             return bookRepository.save(existingBook);
-        }
-        return null;
     }
 
     public void deleteBook(int id){
