@@ -1,7 +1,6 @@
 package com.example.online_book_store.model;
 
 import java.util.List;
-//import com.example.online_book_store.model.Order;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

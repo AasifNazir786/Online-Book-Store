@@ -22,7 +22,7 @@ public class BookOrder {
     private Date orderDate;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
     private Customer customer;
     
     @ManyToMany
