@@ -1,5 +1,6 @@
 package com.example.online_book_store.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,30 +14,34 @@ import com.example.online_book_store.repository.BookOrderRepository;
 public class BookOrderService {
 
     @Autowired
-    private BookOrderRepository BookOrderRepository;
+    private BookOrderRepository bookOrderRepository;
 
     public List<BookOrder> getAllOrders(){
-        return BookOrderRepository.findAll();
-    }   
+        return bookOrderRepository.findAll();
+    }
+
+    public List<BookOrder> getOrdersByDate(LocalDate orderDate) {
+        return bookOrderRepository.findByOrderDate(orderDate);
+    }
 
     public BookOrder getOrderById(int id) throws Exception {
-        return BookOrderRepository.findById(id)
+        return bookOrderRepository.findById(id)
             .orElseThrow(() -> new Exception("BookOrder Not Found"));
     }
 
     public BookOrder createOrder(BookOrder order){
-        return BookOrderRepository.save(order);
+        return bookOrderRepository.save(order);
     }
 
     public BookOrder updatOrder(int id, BookOrder order){
-        BookOrder existingOrder = BookOrderRepository.findById(id).orElse(null);
+        BookOrder existingOrder = bookOrderRepository.findById(id).orElse(null);
         existingOrder.setOrderDate(order.getOrderDate());
         existingOrder.setCustomer(order.getCustomer());
         existingOrder.setBook(order.getBook());
-        return BookOrderRepository.save(existingOrder);
+        return bookOrderRepository.save(existingOrder);
     }
     public void deleteOrder(int id){
-        BookOrder order = BookOrderRepository.findById(id).orElse(null);
-        BookOrderRepository.delete(order);
+        BookOrder order = bookOrderRepository.findById(id).orElse(null);
+        bookOrderRepository.delete(order);
     }
 }

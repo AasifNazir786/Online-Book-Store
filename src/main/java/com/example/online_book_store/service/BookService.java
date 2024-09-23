@@ -1,13 +1,11 @@
 package com.example.online_book_store.service;
 
-import com.example.online_book_store.model.Book;
-
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.online_book_store.model.Book;
 import com.example.online_book_store.repository.BookRepository;
 
 @Service

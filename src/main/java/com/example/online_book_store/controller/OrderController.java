@@ -1,9 +1,11 @@
 package com.example.online_book_store.controller;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,16 @@ public class OrderController {
     @GetMapping
     public List<BookOrder> getAllOrders(){
         return bookOrderService.getAllOrders();
+    }
+
+    @GetMapping("/date/{orderDate}")
+    public ResponseEntity<List<BookOrder>> getOrdersByDate(@PathVariable String orderDate) {
+        LocalDate parsedDate = LocalDate.parse(orderDate); // Parse the date string
+        List<BookOrder> orders = bookOrderService.getOrdersByDate(parsedDate);
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No orders found
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
     
     @GetMapping("/{id}")
