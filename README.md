@@ -21,11 +21,11 @@ This project is a simple online bookstore application built using Java Spring Bo
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/online-bookstore.git
+   git clone https://github.com/AasifNazir786/Online-Book-Store.git
 
 2. **Navigate to the project directory**:
    ```bash
-   cd online-bookstore
+   cd Online-Book-Store
 
 3. **Build the project**:
    ```bash
