@@ -29,6 +29,13 @@ public class AuthorService {
         if (authors.isEmpty()) {
             throw new IllegalArgumentException("Can't save Authors because the list is empty");
         }
+        for (Author author : authors) {
+            if(author.getBooks() != null){
+                for (Book book : author.getBooks()) {
+                    book.setAuthor(author);
+                }
+            }
+        }
         return authorRepository.saveAll(authors);
     }
     
