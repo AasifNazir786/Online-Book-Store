@@ -22,15 +22,6 @@ public class BookService{
         return book;
     }
 
-    // public List<Book> getByAuthorName(Author author){
-    //     List<Book> books = bookRepository.findByAuthorName(author);
-    //     return books;
-    // }
-    public List<Book> getBooksByName(String name){
-        List<Book> books = bookRepository.findByBookTitle(name);
-        return books;
-    }
-
     public Book createBook(Book book){
         Book book2 = bookRepository.save(book);
         return book2;
@@ -55,6 +46,5 @@ public class BookService{
             System.out.println( "Book with id " + id + " not found");
             
         }
-       
     }
 }

@@ -1,6 +1,5 @@
 package com.example.online_book_store.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,6 @@ public class BookOrderService {
 
     public List<BookOrder> getAllOrders(){
         return bookOrderRepository.findAll();
-    }
-
-    public List<BookOrder> getOrdersByDate(LocalDate orderDate) {
-        return bookOrderRepository.findByOrderDate(orderDate);
     }
 
     public BookOrder getOrderById(int id) throws Exception {

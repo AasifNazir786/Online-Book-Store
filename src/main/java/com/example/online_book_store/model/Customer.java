@@ -2,6 +2,7 @@ package com.example.online_book_store.model;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +15,13 @@ import jakarta.persistence.Table;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customer_id")
     private int customerId;
+
+    @Column(name = "customer_name")
     private String customerName;
+
+    @Column(name = "customer_email")
     private String customerEmail;
 
     @OneToMany(mappedBy = "customer")

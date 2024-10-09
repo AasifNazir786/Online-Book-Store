@@ -1,5 +1,6 @@
 package com.example.online_book_store.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,13 +14,20 @@ import jakarta.persistence.Table;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id")
     private int bookId;
+
+    @Column(name = "book_title")
     private String bookTitle;
+
+    @Column(name = "book_stock")
     private long bookStock;
+
+    @Column(name = "book_price")
     private int bookPrice;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "authorId")
+    @JoinColumn(name = "author_id")
     private Author author;
 
     public Book() {}

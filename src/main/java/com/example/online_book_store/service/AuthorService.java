@@ -1,6 +1,7 @@
 package com.example.online_book_store.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class AuthorService {
 
     public Author updateAuthor(int id, Author author){
         Author existingAuthor = authorRepository.findById(id).orElse(null);
-        existingAuthor.setName(author.getName());
+        existingAuthor.setAuthorName(author.getAuthorName());
         existingAuthor.setBooks(author.getBooks());
         return authorRepository.save(existingAuthor);
     }

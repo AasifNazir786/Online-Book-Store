@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,23 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.service.BookService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
+
     @Autowired
     private BookService bookService;
-
-    @GetMapping("/book")
-    public List<Book> getBooksByName(@RequestParam String name){
-        return bookService.getBooksByName(name);
-    }
     
     @GetMapping
-    public List<Book> getAllBooks(){
-        return bookService.getAllBooks();
+    public ResponseEntity<List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/{id}")
@@ -65,11 +60,11 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable int id){
         Book book = bookService.getById(id);
-       if (book != null) {
+        if (book != null) {
             bookService.deleteBook(id);
             return ResponseEntity.noContent().build();
-       } 
+        }
         return ResponseEntity.notFound().build();
-       
+    
     }
 }
