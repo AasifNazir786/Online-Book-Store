@@ -1,7 +1,12 @@
 package com.example.online_book_store.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "books")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "bookId")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +27,12 @@ public class Book {
     private String bookTitle;
 
     @Column(name = "book_stock")
-    private long bookStock;
+    private int bookStock;
 
     @Column(name = "book_price")
-    private int bookPrice;
+    private double bookPrice;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private Author author;
 
@@ -48,11 +54,11 @@ public class Book {
         this.bookTitle = bookTitle;
     }
 
-    public long getBookStock() {
+    public int getBookStock() {
         return bookStock;
     }
 
-    public void setBookStock(long bookStock) {
+    public void setBookStock(int bookStock) {
         this.bookStock = bookStock;
     }
 
@@ -64,11 +70,18 @@ public class Book {
         this.author = author;
     }
 
-    public int getBookPrice() {
+    public double getBookPrice() {
         return bookPrice;
     }
 
-    public void setBookPrice(int bookPrice) {
+    public void setBookPrice(double bookPrice) {
         this.bookPrice = bookPrice;
     }
+
+    @Override
+    public String toString() {
+        return "Book [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookStock=" + bookStock + ", bookPrice="
+                + bookPrice + ", author=" + author + "]";
+    }
+    
 }

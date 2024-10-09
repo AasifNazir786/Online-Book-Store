@@ -2,6 +2,10 @@ package com.example.online_book_store.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "authors")
+@JsonIgnoreProperties({"books"})
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,13 +26,15 @@ public class Author {
     @Column(name = "author_name")
     private String authorName;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Book> books;
 
     public Author() {}
 
-    public Author(String authorName) {
+    public Author(String authorName, List<Book> books) {
         this.authorName = authorName;
+        this.books = books;
     }
 
     public int getId() {
@@ -53,4 +60,14 @@ public class Author {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
+
+    @Override
+    public String toString() {
+        return "Author["+
+        "authorId=" +authorId +
+        ", authorName=" + authorName +
+        ", books=" + books +
+        "]";
+    }
+    
 }

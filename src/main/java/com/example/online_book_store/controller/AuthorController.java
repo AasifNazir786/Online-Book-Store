@@ -3,6 +3,7 @@ package com.example.online_book_store.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,40 +24,31 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping
-    public List<Author> getAllAuthors(){
-        return authorService.getAllAuthors();
+    public ResponseEntity<List<Author>> getAllAuthors() {
+        return ResponseEntity.ok(authorService.getAllAuthors());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Author> getById(@PathVariable int id) {
         Author author = authorService.getById(id);
-        if (author != null) {
-            return ResponseEntity.ok(author);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(author);
     }
 
     @PostMapping
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author){
-        Author author2 = authorService.createAuthor(author);
-        if(author2 != null){
-            return ResponseEntity.ok(author2);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
+        Author createdAuthor = authorService.createAuthor(author);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> updateAuthor(@PathVariable int id, @RequestBody Author author){
-        Author author2 = authorService.updateAuthor(id, author);
-        if(author2 != null) return ResponseEntity.ok(author2);
-        return ResponseEntity.notFound().build(); 
+    public ResponseEntity<Author> updateAuthor(@PathVariable int id, @RequestBody Author author) {
+        Author updatedAuthor = authorService.updateAuthor(id, author);
+        return ResponseEntity.ok(updatedAuthor);
     }
 
-@DeleteMapping("/{id}")
-    public void deleteAuthor(@PathVariable int id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAuthor(@PathVariable int id) {
         authorService.deleteAuthor(id);
-    
+        return ResponseEntity.noContent().build();
     }
-    
 }

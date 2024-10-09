@@ -5,13 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
+import com.example.online_book_store.repository.AuthorRepository;
 import com.example.online_book_store.repository.BookRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookService{
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
 
     public List<Book> getAllBooks(){
         return bookRepository.findAll();
@@ -22,29 +29,60 @@ public class BookService{
         return book;
     }
 
-    public Book createBook(Book book){
-        Book book2 = bookRepository.save(book);
-        return book2;
-    }
-
-    public Book updateBook(int id, Book newBook){
-        Book existingBook = bookRepository.findById(id).orElse(null);
-        
-            existingBook.setBookTitle(newBook.getBookTitle());
-            existingBook.setBookStock(newBook.getBookStock());
-            existingBook.setBookPrice(newBook.getBookPrice());
-            existingBook.setAuthor(newBook.getAuthor());
-            return bookRepository.save(existingBook);
-    }
-
-    public void deleteBook(int id){
-        Book existingBook = bookRepository.findById(id).orElse(null);
-
-        if (existingBook != null) {
-            bookRepository.delete(existingBook);
-        } else {
-            System.out.println( "Book with id " + id + " not found");
-            
+    public Book createBook(Book book) {
+        if (book == null || book.getBookTitle() == null || book.getBookTitle().isEmpty()) {
+            throw new IllegalArgumentException("Book title cannot be null or empty");
         }
+        if (book.getAuthor() != null) {
+            Author author = authorRepository.findById(book.getAuthor().getId()).orElse(null);
+            if (author != null) {
+                book.setAuthor(author);
+            } else {
+                throw new EntityNotFoundException("Author not found with ID: " + book.getAuthor().getId());
+            }
+        }
+        return bookRepository.save(book);
+    }
+    
+
+    public Book updateBook(int bookId, Book updatedBook) {
+        // Fetch the existing book
+        Book existingBook = bookRepository.findById(bookId)
+            .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+    
+        // Update the properties
+        existingBook.setBookTitle(updatedBook.getBookTitle());
+        existingBook.setBookStock(updatedBook.getBookStock());
+        existingBook.setBookPrice(updatedBook.getBookPrice());
+        Author author = authorRepository.findById(updatedBook.getAuthor().getId())
+            .orElseThrow(() -> new EntityNotFoundException("Author not found"));
+    
+        existingBook.setAuthor(author);
+    
+        return bookRepository.save(existingBook);
+    }
+    
+
+    public void deleteBook(int id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Book with id " + id + " not found");
+        }
+        bookRepository.deleteById(id);
+    }
+    
+
+    public List<Book> createBooks(List<Book> books) {
+        for (Book book : books) {
+            Author author = book.getAuthor();
+            if (author != null) {
+                Author existingAuthor = authorRepository.findById(author.getId()).orElse(null);
+                if (existingAuthor == null) {
+                    System.out.println("Author not found with ID: " + author.getId());
+                    continue;
+                }
+                book.setAuthor(existingAuthor);
+            }
+        }
+        return bookRepository.saveAll(books);
     }
 }
