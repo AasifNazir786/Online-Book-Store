@@ -9,7 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -24,10 +31,11 @@ public class Customer {
     @Column(name = "customer_email")
     private String customerEmail;
 
+    @Column(name = "customer_address")
+    private String customerAddress;
+
     @OneToMany(mappedBy = "customer")
     private List<BookOrder> order;
-
-    public Customer() {}
 
     public Customer(String customerName, String customerEmail) {
         this.customerName = customerName;

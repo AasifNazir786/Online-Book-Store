@@ -34,11 +34,11 @@ public class BookService{
             throw new IllegalArgumentException("Book title cannot be null or empty");
         }
         if (book.getAuthor() != null) {
-            Author author = authorRepository.findById(book.getAuthor().getId()).orElse(null);
+            Author author = authorRepository.findById(book.getAuthor().getAuthorId()).orElse(null);
             if (author != null) {
                 book.setAuthor(author);
             } else {
-                throw new EntityNotFoundException("Author not found with ID: " + book.getAuthor().getId());
+                throw new EntityNotFoundException("Author not found with ID: " + book.getAuthor().getAuthorId());
             }
         }
         return bookRepository.save(book);
@@ -54,7 +54,7 @@ public class BookService{
         existingBook.setBookTitle(updatedBook.getBookTitle());
         existingBook.setBookStock(updatedBook.getBookStock());
         existingBook.setBookPrice(updatedBook.getBookPrice());
-        Author author = authorRepository.findById(updatedBook.getAuthor().getId())
+        Author author = authorRepository.findById(updatedBook.getAuthor().getAuthorId())
             .orElseThrow(() -> new EntityNotFoundException("Author not found"));
     
         existingBook.setAuthor(author);
@@ -75,9 +75,9 @@ public class BookService{
         for (Book book : books) {
             Author author = book.getAuthor();
             if (author != null) {
-                Author existingAuthor = authorRepository.findById(author.getId()).orElse(null);
+                Author existingAuthor = authorRepository.findById(author.getAuthorId()).orElse(null);
                 if (existingAuthor == null) {
-                    System.out.println("Author not found with ID: " + author.getId());
+                    System.out.println("Author not found with ID: " + author.getAuthorId());
                     continue;
                 }
                 book.setAuthor(existingAuthor);
