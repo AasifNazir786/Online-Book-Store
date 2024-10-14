@@ -5,10 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.online_book_store.model.BookOrder;
 
-
-
-
-
 @Repository
 public interface BookOrderRepository extends JpaRepository<BookOrder, Integer>{
 }

@@ -40,6 +40,15 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<List<Author>> createListAuthors(@RequestBody List<Author> authors) throws Exception{
+        if(authors == null || authors.isEmpty()){
+            throw new Exception("Unable to create Authors");
+        }
+        List<Author> authors2 = authorService.createListAuthor(authors);
+        return new ResponseEntity<List<Author>>(authors2, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Author> updateAuthor(@PathVariable int id, @RequestBody Author author) {
         Author updatedAuthor = authorService.updateAuthor(id, author);

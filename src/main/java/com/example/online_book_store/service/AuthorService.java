@@ -41,16 +41,30 @@ public class AuthorService {
     
 
     public Author createAuthor(Author author) {
-    if (author == null || author.getAuthorName() == null || author.getAuthorName().isEmpty()) {
-        throw new IllegalArgumentException("Author name cannot be null or empty");
-    }
-    if (author.getBooks() != null) {
-        for (Book book : author.getBooks()) {
-            book.setAuthor(author);
+        if(author == null){
+            throw new EntityNotFoundException("Author can not be null");
         }
+        // List<Book> books = author.getBooks();
+        // System.out.println("books are: "+books);
+        // if(books != null){
+        //     List<Book> newBooks = new ArrayList<>();
+        //     for (Book book : books) {
+        //         Book book2;
+        //         System.out.println(book.getBookId());
+        //         if(book.getBookId() == 0){
+        //             book2 = bookRepository.save(book);
+        //         }else{
+        //             book2 = bookRepository.findById(book.getBookId())
+        //                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + book.getBookId() + " not found"));
+        //         }
+        //         newBooks.add(book2);
+        //     }
+        //     author.setBooks(newBooks);
+        //     System.out.println("new books are: " + newBooks);
+        // }
+        return authorRepository.save(author);
     }
-    return authorRepository.save(author);
-    }
+    
 
     public Author updateAuthor(int id, Author author) {
 
