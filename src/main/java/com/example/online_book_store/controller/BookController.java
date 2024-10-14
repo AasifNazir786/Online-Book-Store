@@ -42,8 +42,8 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
-    @PostMapping("/books")
-    public ResponseEntity<List<Book>> createBooks(@RequestBody List<Book> books) {
+    @PostMapping("/list")
+    public ResponseEntity<List<Book>> createBooks(@RequestBody List<Book> books) throws Exception {
         if (books.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }

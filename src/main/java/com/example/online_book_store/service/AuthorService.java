@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.repository.AuthorRepository;
+import com.example.online_book_store.repository.BookRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -15,6 +16,9 @@ import jakarta.persistence.EntityNotFoundException;
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     public List<Author> getAllAuthors(){
         return authorRepository.findAll();
@@ -44,6 +48,8 @@ public class AuthorService {
         if(author == null){
             throw new EntityNotFoundException("Author can not be null");
         }
+        //Not mandatory to do this...............................................
+
         // List<Book> books = author.getBooks();
         // System.out.println("books are: "+books);
         // if(books != null){
@@ -57,6 +63,7 @@ public class AuthorService {
         //             book2 = bookRepository.findById(book.getBookId())
         //                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + book.getBookId() + " not found"));
         //         }
+        //         book2.setAuthor(author);
         //         newBooks.add(book2);
         //     }
         //     author.setBooks(newBooks);

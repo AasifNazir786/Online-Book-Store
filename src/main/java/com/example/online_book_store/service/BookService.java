@@ -43,8 +43,25 @@ public class BookService{
         }
         return bookRepository.save(book);
     }
-    
 
+    public List<Book> createBooks(List<Book> books) throws Exception {
+        if(books == null || books.isEmpty()){
+            throw new Exception("books can't be Null or Empty");
+        }
+        for (Book book : books) {
+            Author author = book.getAuthor();
+            if (author != null) {
+                Author existingAuthor = authorRepository.findById(author.getAuthorId()).orElse(null);
+                if (existingAuthor == null) {
+                    System.out.println("Author not found with ID: " + author.getAuthorId());
+                    continue;
+                }
+                book.setAuthor(existingAuthor);
+            }
+        }
+        return bookRepository.saveAll(books);
+    }
+    
     public Book updateBook(int bookId, Book updatedBook) {
         // Fetch the existing book
         Book existingBook = bookRepository.findById(bookId)
@@ -68,21 +85,5 @@ public class BookService{
             throw new EntityNotFoundException("Book with id " + id + " not found");
         }
         bookRepository.deleteById(id);
-    }
-    
-
-    public List<Book> createBooks(List<Book> books) {
-        for (Book book : books) {
-            Author author = book.getAuthor();
-            if (author != null) {
-                Author existingAuthor = authorRepository.findById(author.getAuthorId()).orElse(null);
-                if (existingAuthor == null) {
-                    System.out.println("Author not found with ID: " + author.getAuthorId());
-                    continue;
-                }
-                book.setAuthor(existingAuthor);
-            }
-        }
-        return bookRepository.saveAll(books);
     }
 }
