@@ -10,16 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
+
 @Entity
 @Table(name = "customers")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,10 +35,9 @@ public class Customer {
     private String customerAddress;
 
     @OneToMany(mappedBy = "customer")
-    private List<BookOrder> order;
+    private List<BookOrder> orders;
 
-    public Customer(String customerName, String customerEmail) {
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
+    public void setCustomerId(int id) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

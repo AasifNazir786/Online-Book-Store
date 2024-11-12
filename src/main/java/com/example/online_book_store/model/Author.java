@@ -3,7 +3,6 @@ package com.example.online_book_store.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,18 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
 @Entity
 @Table(name = "authors")
-@JsonIgnoreProperties({"books"})
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +27,50 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Book> books;
+
+    public Author() {
+    }
+
+    public Author(int authorId, String authorName, List<Book> books) {
+        this.authorId = authorId;
+        this.authorName = authorName;
+        this.books = books;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Author{");
+        sb.append("authorId=").append(authorId);
+        sb.append(", authorName=").append(authorName);
+        sb.append(", books=").append(books);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    
 }

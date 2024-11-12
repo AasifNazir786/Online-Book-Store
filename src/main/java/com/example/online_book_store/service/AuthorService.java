@@ -1,14 +1,16 @@
 package com.example.online_book_store.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.online_book_store.dto.AuthorDTO;
+import com.example.online_book_store.dto.BookDTO;
 import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.repository.AuthorRepository;
-import com.example.online_book_store.repository.BookRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -17,8 +19,45 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private BookRepository bookRepository;
+    public AuthorDTO authorToAuthorDTO(Author author){
+        AuthorDTO dto = new AuthorDTO();
+        dto.setAuthorId(author.getAuthorId());
+        dto.setAuthorName(author.getAuthorName());
+
+        List<BookDTO> dtoList = new ArrayList<>();
+        List<Book> bookList = author.getBooks() != null ? author.getBooks() : new ArrayList<>();
+        for(var book : bookList){
+            BookDTO bookDTO = new BookDTO();
+            bookDTO.setBookId(book.getBookId());
+            bookDTO.setBookTitle(book.getBookTitle());
+            bookDTO.setBookStock(book.getBookStock());
+            bookDTO.setBookPrice(book.getBookPrice());
+            dtoList.add(bookDTO);
+        }
+        dto.setBooks(dtoList);
+        return dto;
+    }
+
+    public Author dtoTAuthor(AuthorDTO authorDTO){
+        Author author = new Author();
+        author.setAuthorId(authorDTO.getAuthorId());
+        author.setAuthorName(authorDTO.getAuthorName());
+
+        // Convert books from BookDTO to Book entity
+        List<Book> books = new ArrayList<>();
+        for (BookDTO bookDTO : authorDTO.getBooks()) {
+            Book book = new Book();
+            book.setBookId(bookDTO.getBookId());
+            book.setBookTitle(bookDTO.getBookTitle());
+            book.setBookStock(bookDTO.getBookStock());
+            book.setBookPrice(bookDTO.getBookPrice());
+            book.setAuthor(author);
+            books.add(book);
+        }
+        author.setBooks(books);
+
+        return author;
+    }
 
     public List<Author> getAllAuthors(){
         return authorRepository.findAll();

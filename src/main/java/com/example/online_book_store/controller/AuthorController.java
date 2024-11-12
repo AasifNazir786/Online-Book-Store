@@ -46,7 +46,7 @@ public class AuthorController {
             throw new Exception("Unable to create Authors");
         }
         List<Author> authors2 = authorService.createListAuthor(authors);
-        return new ResponseEntity<List<Author>>(authors2, HttpStatus.CREATED);
+        return new ResponseEntity<>(authors2, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

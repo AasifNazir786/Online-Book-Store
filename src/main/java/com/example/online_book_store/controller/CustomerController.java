@@ -45,9 +45,15 @@ public class CustomerController {
     // Create a new customer
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-        Customer savedCustomer = customerService.saveCustomer(customer);
-        return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
+        try {
+            Customer savedCustomer = customerService.saveCustomer(customer);
+            return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Handle the exception (log it, return an error response, etc.)
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     // Update an existing customer
     @PutMapping("/{id}")
