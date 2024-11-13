@@ -49,7 +49,6 @@ public class CustomerController {
             Customer savedCustomer = customerService.saveCustomer(customer);
             return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
         } catch (Exception e) {
-            // Handle the exception (log it, return an error response, etc.)
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.online_book_store.dto.BookDTO;
 import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.repository.AuthorRepository;
@@ -85,5 +86,15 @@ public class BookService{
             throw new EntityNotFoundException("Book with id " + id + " not found");
         }
         bookRepository.deleteById(id);
+    }
+
+    public BookDTO bookToBookDTO(Book book) {
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setBookId(book.getBookId());
+        bookDTO.setBookTitle(book.getBookTitle());
+        bookDTO.setBookPrice(book.getBookPrice());
+        bookDTO.setBookStock(book.getBookStock());
+        bookDTO.setAuthorName(book.getAuthor().getAuthorName());
+        return bookDTO;
     }
 }

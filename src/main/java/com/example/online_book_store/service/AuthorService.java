@@ -19,6 +19,9 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private BookService bookService;
+
     public AuthorDTO authorToAuthorDTO(Author author){
         AuthorDTO dto = new AuthorDTO();
         dto.setAuthorId(author.getAuthorId());
@@ -32,13 +35,14 @@ public class AuthorService {
             bookDTO.setBookTitle(book.getBookTitle());
             bookDTO.setBookStock(book.getBookStock());
             bookDTO.setBookPrice(book.getBookPrice());
+            bookDTO.setAuthorName(author.getAuthorName());
             dtoList.add(bookDTO);
         }
         dto.setBooks(dtoList);
         return dto;
     }
 
-    public Author dtoTAuthor(AuthorDTO authorDTO){
+    public Author dtoToAuthor(AuthorDTO authorDTO){
         Author author = new Author();
         author.setAuthorId(authorDTO.getAuthorId());
         author.setAuthorName(authorDTO.getAuthorName());
@@ -59,31 +63,45 @@ public class AuthorService {
         return author;
     }
 
-    public List<Author> getAllAuthors(){
-        return authorRepository.findAll();
+    public List<AuthorDTO> getAllAuthors(){
+        List<AuthorDTO> authorDTOList = new ArrayList<>();
+        List<Author> authorList = authorRepository.findAll();
+
+        for(Author author : authorList){
+            AuthorDTO dto = authorToAuthorDTO(author);
+            authorDTOList.add(dto);
+        }
+        return authorDTOList;
     }
 
-    public Author getById(int id) {
-        return authorRepository.findById(id)
+    public AuthorDTO getById(int id) {
+        Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author not found with id: " + id));
+        return authorToAuthorDTO(author);
     }
     
-    public List<Author> createListAuthor(List<Author> authors) {
+    public List<AuthorDTO> createListAuthor(List<Author> authors) {
         if (authors.isEmpty()) {
             throw new IllegalArgumentException("Can't save Authors because the list is empty");
         }
+        List<AuthorDTO> list = new ArrayList<>();
         for (Author author : authors) {
+            AuthorDTO authorDTO = authorToAuthorDTO(author);
             if(author.getBooks() != null){
+                List<BookDTO> bookDTOList = new ArrayList<>();
                 for (Book book : author.getBooks()) {
-                    book.setAuthor(author);
+                    BookDTO bookDTO = bookService.bookToBookDTO(book);
+                    bookDTOList.add(bookDTO);
                 }
+                authorDTO.setBooks(bookDTOList);
             }
+            list.add(authorDTO);
         }
-        return authorRepository.saveAll(authors);
+        return list;
     }
     
 
-    public Author createAuthor(Author author) {
+    public AuthorDTO createAuthor(Author author) {
         if(author == null){
             throw new EntityNotFoundException("Author can not be null");
         }
@@ -108,7 +126,8 @@ public class AuthorService {
         //     author.setBooks(newBooks);
         //     System.out.println("new books are: " + newBooks);
         // }
-        return authorRepository.save(author);
+        Author author1 = authorRepository.save(author);
+        return authorToAuthorDTO(author1);
     }
     
 

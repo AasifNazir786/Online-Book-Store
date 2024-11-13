@@ -2,6 +2,7 @@ package com.example.online_book_store.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class Customer {
     @Column(name = "customer_address")
     private String customerAddress;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<BookOrder> orders;
 
     public void setCustomerId(int id) {

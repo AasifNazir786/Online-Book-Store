@@ -24,6 +24,9 @@ public class Author {
     @Column(name = "author_name")
     private String authorName;
 
+    @Column(name="author_bio")
+    private String authorBiography;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Book> books;
@@ -35,6 +38,14 @@ public class Author {
         this.authorId = authorId;
         this.authorName = authorName;
         this.books = books;
+    }
+
+    public String getAuthorBiography() {
+        return authorBiography;
+    }
+
+    public void setAuthorBiography(String authorBiography) {
+        this.authorBiography = authorBiography;
     }
 
     public int getAuthorId() {

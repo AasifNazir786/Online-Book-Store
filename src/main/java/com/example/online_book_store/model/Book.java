@@ -31,7 +31,7 @@ public class Book {
     @Column(name = "book_price")
     private double bookPrice;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     @JsonManagedReference
     private Author author;
@@ -39,8 +39,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(int bookId, String bookTitle, int bookStock, double bookPrice, Author author) {
-        this.bookId = bookId;
+    public Book(String bookTitle, int bookStock, double bookPrice, Author author) {
         this.bookTitle = bookTitle;
         this.bookStock = bookStock;
         this.bookPrice = bookPrice;

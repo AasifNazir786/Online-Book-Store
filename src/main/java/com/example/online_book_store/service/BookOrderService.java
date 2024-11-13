@@ -32,7 +32,7 @@ public class BookOrderService {
         BookOrder existingOrder = bookOrderRepository.findById(id).orElse(null);
         existingOrder.setOrderDate(order.getOrderDate());
         existingOrder.setCustomer(order.getCustomer());
-        existingOrder.setBook(order.getBook());
+        existingOrder.setBooks(order.getBooks());
         return bookOrderRepository.save(existingOrder);
     }
     public void deleteOrder(int id){

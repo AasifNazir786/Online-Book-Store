@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.online_book_store.dto.AuthorDTO;
 import com.example.online_book_store.model.Author;
 import com.example.online_book_store.service.AuthorService;
 
@@ -24,28 +25,28 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAllAuthors() {
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
         return ResponseEntity.ok(authorService.getAllAuthors());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> getById(@PathVariable int id) {
-        Author author = authorService.getById(id);
+    public ResponseEntity<AuthorDTO> getById(@PathVariable int id) {
+        AuthorDTO author = authorService.getById(id);
         return ResponseEntity.ok(author);
     }
 
     @PostMapping
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        Author createdAuthor = authorService.createAuthor(author);
+    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody Author author) {
+        AuthorDTO createdAuthor = authorService.authorToAuthorDTO(author);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAuthor);
     }
 
     @PostMapping("/list")
-    public ResponseEntity<List<Author>> createListAuthors(@RequestBody List<Author> authors) throws Exception{
+    public ResponseEntity<List<AuthorDTO>> createListAuthors(@RequestBody List<Author> authors) throws Exception{
         if(authors == null || authors.isEmpty()){
             throw new Exception("Unable to create Authors");
         }
-        List<Author> authors2 = authorService.createListAuthor(authors);
+        List<AuthorDTO> authors2 = authorService.createListAuthor(authors);
         return new ResponseEntity<>(authors2, HttpStatus.CREATED);
     }
 
