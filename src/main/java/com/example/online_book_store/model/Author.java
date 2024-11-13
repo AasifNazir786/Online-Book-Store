@@ -34,10 +34,11 @@ public class Author {
     public Author() {
     }
 
-    public Author(int authorId, String authorName, List<Book> books) {
+    public Author(int authorId, String authorName, List<Book> books, String authorBiography) {
         this.authorId = authorId;
         this.authorName = authorName;
         this.books = books;
+        this.authorBiography = authorBiography;
     }
 
     public String getAuthorBiography() {
@@ -74,14 +75,7 @@ public class Author {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Author{");
-        sb.append("authorId=").append(authorId);
-        sb.append(", authorName=").append(authorName);
-        sb.append(", books=").append(books);
-        sb.append('}');
-        return sb.toString();
+        return "Author [authorId=" + authorId + ", authorName=" + authorName + ", authorBiography=" + authorBiography
+                + ", books=" + books + "]";
     }
-
-    
 }

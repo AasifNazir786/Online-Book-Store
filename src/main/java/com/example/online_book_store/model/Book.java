@@ -31,7 +31,7 @@ public class Book {
     @Column(name = "book_price")
     private double bookPrice;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     @JsonManagedReference
     private Author author;

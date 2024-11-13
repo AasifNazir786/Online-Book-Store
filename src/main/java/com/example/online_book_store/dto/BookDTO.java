@@ -53,8 +53,4 @@ public class BookDTO {
         sb.append('}');
         return sb.toString();
     }
-
-
-
-    
 }
