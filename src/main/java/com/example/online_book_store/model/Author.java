@@ -27,7 +27,7 @@ public class Author {
     @Column(name="author_bio")
     private String authorBiography;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<Book> books;
 
