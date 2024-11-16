@@ -2,7 +2,8 @@ package com.example.online_book_store.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "authors")
+@JsonIgnoreProperties(value = "books")
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,26 +29,27 @@ public class Author {
     @Column(name="author_bio")
     private String authorBiography;
 
-    @OneToMany(mappedBy = "author", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
+    @Column(name = "nationality")
+    private String nationality;
+
+    @Column(name = "awards")
+    private String awards;
+
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.ALL, CascadeType.PERSIST})
+    @JsonManagedReference
     private List<Book> books;
 
     public Author() {
     }
 
-    public Author(int authorId, String authorName, List<Book> books, String authorBiography) {
+    public Author(int authorId, String authorName, String authorBiography, String nationality, String awards,
+            List<Book> books) {
         this.authorId = authorId;
         this.authorName = authorName;
+        this.authorBiography = authorBiography;
+        this.nationality = nationality;
+        this.awards = awards;
         this.books = books;
-        this.authorBiography = authorBiography;
-    }
-
-    public String getAuthorBiography() {
-        return authorBiography;
-    }
-
-    public void setAuthorBiography(String authorBiography) {
-        this.authorBiography = authorBiography;
     }
 
     public int getAuthorId() {
@@ -65,6 +68,30 @@ public class Author {
         this.authorName = authorName;
     }
 
+    public String getAuthorBiography() {
+        return authorBiography;
+    }
+
+    public void setAuthorBiography(String authorBiography) {
+        this.authorBiography = authorBiography;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getAwards() {
+        return awards;
+    }
+
+    public void setAwards(String awards) {
+        this.awards = awards;
+    }
+
     public List<Book> getBooks() {
         return books;
     }
@@ -76,6 +103,6 @@ public class Author {
     @Override
     public String toString() {
         return "Author [authorId=" + authorId + ", authorName=" + authorName + ", authorBiography=" + authorBiography
-                + ", books=" + books + "]";
+                + ", nationality=" + nationality + ", awards=" + awards + "]";
     }
 }

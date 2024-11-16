@@ -1,4 +1,57 @@
-// package com.example.online_book_store.controller;
+package com.example.online_book_store.controller;
+
+import com.example.online_book_store.dto.BookDTO;
+import com.example.online_book_store.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/books")
+public class BookController {
+
+    @Autowired
+    private BookService bookService;
+
+    @PostMapping("/save")
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO){
+        if(bookDTO == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+//        System.out.println("Received BookDTO: " + bookDTO);
+
+        BookDTO bookDTO1 = bookService.createBookDTO(bookDTO);
+        return new ResponseEntity<>(bookDTO1, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<BookDTO>> getAllBooks(){
+        List<BookDTO> bookDTOs = bookService.getAllBookDTOs();
+        return new ResponseEntity<>(bookDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<BookDTO> getById(@PathVariable int id){
+        BookDTO bookDTO = bookService.getBookDTOById(id);
+        return  new ResponseEntity<>(bookDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BookDTO> updateBook(@PathVariable int id, @RequestBody BookDTO bookDTO){
+        BookDTO bookDTO1 = bookService.updateBookDTO(id, bookDTO);
+        return new ResponseEntity<>(bookDTO1, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteById(@PathVariable int id){
+        bookService.deleteBookDTO(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}
 
 // import java.util.List;
 

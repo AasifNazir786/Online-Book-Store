@@ -7,4 +7,6 @@ import com.example.online_book_store.model.Author;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Integer>{
+
+    Author findByAuthorName(String authorName);
 }

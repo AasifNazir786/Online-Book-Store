@@ -1,40 +1,76 @@
 package com.example.online_book_store.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.online_book_store.dto.BookDTO;
+import com.example.online_book_store.mapper.BookMapper;
+import com.example.online_book_store.model.Author;
+import com.example.online_book_store.model.Book;
+import com.example.online_book_store.repository.AuthorRepository;
+import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.service_repository.BookRepo;
 
 @Service
 public class BookService implements BookRepo {
 
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookMapper bookMapper;
+
     @Override
     public BookDTO createBookDTO(BookDTO bookDTO) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        Author author = authorRepository.findByAuthorName(bookDTO.getAuthorName());
+        if (author == null) {
+            throw new IllegalArgumentException("Author with name '" + bookDTO.getAuthorName() + "' does not exist.");
+        }
+
+        Book book = bookMapper.toEntity(bookDTO);
+        book.setAuthor(author);
+
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.toDTO(savedBook);
     }
 
     @Override
     public List<BookDTO> getAllBookDTOs() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Book> books = bookRepository.findAll();
+        if(books != null){
+            List<BookDTO> bookDTOs = new ArrayList<>();
+            for(var book : books){
+                BookDTO bookDTO = bookMapper.toDTO(book);
+                String authName = book.getAuthor().getAuthorName();
+                bookDTO.setAuthorName(authName);
+                bookDTOs.add(bookDTO);
+            }
+            return bookDTOs;
+        }
+        return null;
     }
 
     @Override
     public BookDTO getBookDTOById(int id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     @Override
     public BookDTO updateBookDTO(int id, BookDTO bookDTO) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     @Override
     public void deleteBookDTO(int id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
     }
-    
 }
 
 

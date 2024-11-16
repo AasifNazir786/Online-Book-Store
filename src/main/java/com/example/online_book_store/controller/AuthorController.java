@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.online_book_store.dto.AuthorDTO;
-import com.example.online_book_store.repository.BookOrderRepository;
 import com.example.online_book_store.service.AuthorService;
 
 
@@ -27,9 +26,6 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-    @Autowired
-    private BookOrderRepository bookOrderRepository;
-
 
     @PostMapping("/create")
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO){
@@ -40,7 +36,7 @@ public class AuthorController {
         return new ResponseEntity<>(author, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")    
+    @GetMapping("/all")
     public ResponseEntity<List<AuthorDTO>> getAllAuthors(){
         List<AuthorDTO> authors = authorService.getAllAuthorDTOs();
         return new ResponseEntity<>(authors, HttpStatus.OK);

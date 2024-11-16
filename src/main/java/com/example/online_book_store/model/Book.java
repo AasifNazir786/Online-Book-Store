@@ -1,6 +1,6 @@
 package com.example.online_book_store.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,18 +31,28 @@ public class Book {
     @Column(name = "book_price")
     private double bookPrice;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @Column(name = "genre")
+    private String genre;
+
+    @Column(name = "publication_date")
+    private String publicationDate;
+
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Author author;
 
     public Book() {
     }
 
-    public Book(String bookTitle, int bookStock, double bookPrice, Author author) {
+    public Book(int bookId, String bookTitle, int bookStock, double bookPrice, String genre, String publicationDate,
+            Author author) {
+        this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.bookStock = bookStock;
         this.bookPrice = bookPrice;
+        this.genre = genre;
+        this.publicationDate = publicationDate;
         this.author = author;
     }
 
@@ -78,6 +88,22 @@ public class Book {
         this.bookPrice = bookPrice;
     }
 
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
     public Author getAuthor() {
         return author;
     }
@@ -89,8 +115,6 @@ public class Book {
     @Override
     public String toString() {
         return "Book [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookStock=" + bookStock + ", bookPrice="
-                + bookPrice + ", author=" + author + "]";
+                + bookPrice + ", genre=" + genre + ", publicationDate=" + publicationDate + "]";
     }
-
-    
 }

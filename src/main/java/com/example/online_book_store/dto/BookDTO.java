@@ -7,50 +7,87 @@ package com.example.online_book_store.dto;
 
 public class BookDTO {
     private int bookId;
-    private String bookTitle, authorName;
+    private String bookTitle;
     private int bookStock;
     private double bookPrice;
-    
-    public BookDTO() {}
+    private String genre;
+    private String publicationDate;
+    private String authorName;
 
-    public BookDTO(int bookId, String bookTitle, String authorName, int bookStock, double bookPrice) {
+    public BookDTO() {
+    }
+
+    public BookDTO(int bookId, String bookTitle, int bookStock, double bookPrice, String genre, String publicationDate,
+            String authorName) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
-        this.authorName = authorName;
         this.bookStock = bookStock;
+        this.bookPrice = bookPrice;
+        this.genre = genre;
+        this.publicationDate = publicationDate;
+        this.authorName = authorName;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
+    public int getBookStock() {
+        return bookStock;
+    }
+
+    public void setBookStock(int bookStock) {
+        this.bookStock = bookStock;
+    }
+
+    public double getBookPrice() {
+        return bookPrice;
+    }
+
+    public void setBookPrice(double bookPrice) {
         this.bookPrice = bookPrice;
     }
 
-    public int getBookId() {return bookId;}
+    public String getGenre() {
+        return genre;
+    }
 
-    public void setBookId(int bookId) {this.bookId = bookId;}
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
-    public String getBookTitle() {return bookTitle;}
+    public String getPublicationDate() {
+        return publicationDate;
+    }
 
-    public void setBookTitle(String bookTitle) {this.bookTitle = bookTitle;}
+    public void setPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
+    }
 
-    public int getBookStock() {return bookStock;}
+    public String getAuthorName() {
+        return authorName;
+    }
 
-    public void setBookStock(int bookStock) {this.bookStock = bookStock;}
-
-    public double getBookPrice() {return bookPrice;}
-
-    public void setBookPrice(double bookPrice) {this.bookPrice = bookPrice;}
-
-    public String getAuthorName() {return authorName;}
-
-    public void setAuthorName(String authorName) {this.authorName = authorName;}
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("BookDTO{");
-        sb.append("bookId=").append(bookId);
-        sb.append(", bookTitle=").append(bookTitle);
-        sb.append(", AuthorName=").append(authorName);
-        sb.append(", bookStock=").append(bookStock);
-        sb.append(", bookPrice=").append(bookPrice);
-        sb.append('}');
-        return sb.toString();
+        return "BookDTO [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookStock=" + bookStock + ", bookPrice="
+                + bookPrice + ", genre=" + genre + ", publicationDate=" + publicationDate + ", authorName=" + authorName
+                + "]";
     }
 }
