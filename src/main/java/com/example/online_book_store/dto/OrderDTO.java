@@ -9,17 +9,17 @@ public class OrderDTO {
     private LocalDate orderDate;
     private int quantity;
     private CustomerDTO customer;
-    private List<BookDTO> books;
+    private List<String> booksName;
 
     public OrderDTO() {}
 
     public OrderDTO(int orderId, String bookTitle, LocalDate orderDate, int quantity, CustomerDTO customer,
-            List<BookDTO> books) {
+            List<String> booksName) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.quantity = quantity;
         this.customer = customer;
-        this.books = books;
+        this.booksName = booksName;
     }
 
     public int getOrderId() { return orderId; }
@@ -42,14 +42,14 @@ public class OrderDTO {
 
     public void setCustomer(CustomerDTO customer) {this.customer = customer;}
 
-    public List<BookDTO> getBooks() {return books;}
+    public List<String> getBooks() {return booksName;}
 
-    public void setBooks(List<BookDTO> books) {this.books = books;}
+    public void setBooks(List<String> books) {this.booksName = books;}
 
     @Override
     public String toString() {
         return "OrderDTO [orderId=" + orderId + ", bookTitle=" + bookTitle + ", orderDate=" + orderDate + ", quantity="
-                + quantity + ", customer=" + customer + ", books=" + books + "]";
+                + quantity + ", customer=" + customer + ", books=" + booksName + "]";
     }
     
 }
