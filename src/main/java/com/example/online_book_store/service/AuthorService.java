@@ -2,7 +2,6 @@ package com.example.online_book_store.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,19 +36,12 @@ public class AuthorService implements AuthorRepo {
 
     @Override
     public AuthorDTO createAuthorDTO(AuthorDTO authorDTO) {
-        // Try to find the author by authorName
         Author author = authorRepository.findByAuthorName(authorDTO.getAuthorName());
 
-        // If the author does not exist, create a new author
         if (author == null) {
-            author = new Author();
-            author.setAuthorName(authorDTO.getAuthorName());
-            author.setAuthorBiography(authorDTO.getAuthorBiography());
-            author.setNationality(authorDTO.getNationality());
-            author.setAwards(authorDTO.getAwards());
+            author = authorMapper.toEntity(authorDTO);
         }
 
-        // Create and add books to the author
         List<Book> books = new ArrayList<>();
         if (authorDTO.getBooks() != null) {
             for (BookDTO bookDTO : authorDTO.getBooks()) {
@@ -71,7 +63,7 @@ public class AuthorService implements AuthorRepo {
         List<BookDTO> bookDTOs = new ArrayList<>();
         for (Book book : savedAuthor.getBooks()) {
             BookDTO bookDTO = bookMapper.toDTO(book);
-            bookDTO.setAuthorName(book.getAuthor().getAuthorName());
+            bookDTO.setAuthorId(book.getAuthor().getAuthorId());
             bookDTOs.add(bookDTO);
         }
 
@@ -95,7 +87,7 @@ public class AuthorService implements AuthorRepo {
                         for (Book book : author.getBooks()) {
 
                             BookDTO bookDTO = bookMapper.toDTO(book);
-                            bookDTO.setAuthorName(author.getAuthorName());
+                            bookDTO.setAuthorId(author.getAuthorId());
 
                             bookDTOs.add(bookDTO);
                         }
@@ -125,7 +117,7 @@ public class AuthorService implements AuthorRepo {
             for (Book book : author.getBooks()) {
                 BookDTO bookDTO = bookMapper.toDTO(book);
 
-                bookDTO.setAuthorName(author.getAuthorName());
+                bookDTO.setAuthorId(author.getAuthorId());
 
                 bookDTOs.add(bookDTO);
             }
@@ -160,21 +152,21 @@ public class AuthorService implements AuthorRepo {
                     book.setGenre(bookDTO.getGenre());
                     book.setPublicationDate(bookDTO.getPublicationDate());
 
-                    Author bookAuthor = authorRepository.findByAuthorName(bookDTO.getAuthorName());
+                    Author bookAuthor = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
                     if (bookAuthor != null) {
                         book.setAuthor(bookAuthor);
                     } else {
-                        throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorName());
+                        throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorId());
                     }
 
                 } else {
                     book = bookMapper.toEntity(bookDTO);
 
-                    Author bookAuthor = authorRepository.findByAuthorName(bookDTO.getAuthorName());
+                    Author bookAuthor = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
                     if (bookAuthor != null) {
                         book.setAuthor(bookAuthor);
                     } else {
-                        throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorName());
+                        throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorId());
                     }
                 }
 
@@ -192,7 +184,7 @@ public class AuthorService implements AuthorRepo {
         List<BookDTO> bookDTOs = new ArrayList<>();
         for (Book book : savedAuthor.getBooks()) {
             BookDTO bookDTO = bookMapper.toDTO(book);
-            bookDTO.setAuthorName(book.getAuthor().getAuthorName());
+            bookDTO.setAuthorId(book.getAuthor().getAuthorId());
             bookDTOs.add(bookDTO);
         }
 

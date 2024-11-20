@@ -8,18 +8,19 @@ public class OrderDTO {
     private String bookTitle;
     private LocalDate orderDate;
     private int quantity;
-    private CustomerDTO customer;
-    private List<String> booksName;
+    private int customerId;
+    private List<Integer> booksIDs;
 
     public OrderDTO() {}
 
-    public OrderDTO(int orderId, String bookTitle, LocalDate orderDate, int quantity, CustomerDTO customer,
-            List<String> booksName) {
+    public OrderDTO(int orderId, String bookTitle, LocalDate orderDate, int quantity, int customerId,
+            List<Integer> booksIDs) {
         this.orderId = orderId;
+        this.bookTitle = bookTitle;
         this.orderDate = orderDate;
         this.quantity = quantity;
-        this.customer = customer;
-        this.booksName = booksName;
+        this.customerId = customerId;
+        this.booksIDs = booksIDs;
     }
 
     public int getOrderId() { return orderId; }
@@ -38,18 +39,26 @@ public class OrderDTO {
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public CustomerDTO getCustomer() { return customer; }
+    public int getCustomerId() {
+        return customerId;
+    }
 
-    public void setCustomer(CustomerDTO customer) {this.customer = customer;}
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
 
-    public List<String> getBooks() {return booksName;}
+    public List<Integer> getBooksIDs() {
+        return booksIDs;
+    }
 
-    public void setBooks(List<String> books) {this.booksName = books;}
+    public void setBooksIDs(List<Integer> booksIDs) {
+        this.booksIDs = booksIDs;
+    }
 
     @Override
     public String toString() {
         return "OrderDTO [orderId=" + orderId + ", bookTitle=" + bookTitle + ", orderDate=" + orderDate + ", quantity="
-                + quantity + ", customer=" + customer + ", books=" + booksName + "]";
+                + quantity + ", customerId=" + customerId + ", booksIDs=" + booksIDs + "]";
     }
     
 }

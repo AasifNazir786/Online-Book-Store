@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.online_book_store.dto;
 
 public class BookDTO {
@@ -12,20 +7,20 @@ public class BookDTO {
     private double bookPrice;
     private String genre;
     private String publicationDate;
-    private String authorName;
+    private int authorId;
 
     public BookDTO() {
     }
 
     public BookDTO(int bookId, String bookTitle, int bookStock, double bookPrice, String genre, String publicationDate,
-            String authorName) {
+            int authorId) {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.bookStock = bookStock;
         this.bookPrice = bookPrice;
         this.genre = genre;
         this.publicationDate = publicationDate;
-        this.authorName = authorName;
+        this.authorId = authorId;
     }
 
     public int getBookId() {
@@ -76,18 +71,18 @@ public class BookDTO {
         this.publicationDate = publicationDate;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     @Override
     public String toString() {
         return "BookDTO [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookStock=" + bookStock + ", bookPrice="
-                + bookPrice + ", genre=" + genre + ", publicationDate=" + publicationDate + ", authorName=" + authorName
+                + bookPrice + ", genre=" + genre + ", publicationDate=" + publicationDate + ", authorId=" + authorId
                 + "]";
     }
 }

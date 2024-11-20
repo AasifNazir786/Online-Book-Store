@@ -28,18 +28,38 @@ public class BookService implements BookRepo {
 
     @Override
     public BookDTO createBookDTO(BookDTO bookDTO) {
+        Author author = null;
+        try {
+            // Find the author by authorId (if exists)
+            author = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
 
-        Author author = authorRepository.findByAuthorName(bookDTO.getAuthorName());
-        if (author == null) {
-            throw new IllegalArgumentException("Author with name '" + bookDTO.getAuthorName() + "' does not exist.");
+            // If the author doesn't exist, create a new author and save
+            if (author == null) {
+                author = new Author();
+                author.setAuthorId(bookDTO.getAuthorId());
+                authorRepository.save(author); // Save the new author
+            }
+
+            // Map the BookDTO to a Book entity
+            Book book = bookMapper.toEntity(bookDTO);
+            book.setAuthor(author); // Associate the found or created author
+
+            // Save the book entity
+            Book savedBook = bookRepository.save(book);
+
+            // Convert the saved book entity to a BookDTO
+            BookDTO savedBookDTO = bookMapper.toDTO(savedBook);
+            savedBookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
+
+            return savedBookDTO;
+        } catch (Exception e) {
+            // Log the error and rethrow as appropriate
+            System.out.println("Error occurred while saving book: " + e.getMessage());
+            throw new RuntimeException("Error occurred while saving book", e);
         }
-
-        Book book = bookMapper.toEntity(bookDTO);
-        book.setAuthor(author);
-
-        Book savedBook = bookRepository.save(book);
-        return bookMapper.toDTO(savedBook);
     }
+
+
 
     @Override
     public List<BookDTO> getAllBookDTOs() {
@@ -48,8 +68,8 @@ public class BookService implements BookRepo {
             List<BookDTO> bookDTOs = new ArrayList<>();
             for(var book : books){
                 BookDTO bookDTO = bookMapper.toDTO(book);
-                String authName = book.getAuthor().getAuthorName();
-                bookDTO.setAuthorName(authName);
+                int authId = book.getAuthor().getAuthorId();
+                bookDTO.setAuthorId(authId);
                 bookDTOs.add(bookDTO);
             }
             return bookDTOs;

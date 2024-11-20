@@ -3,6 +3,7 @@ package com.example.online_book_store.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -34,13 +35,14 @@ public class BookOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
     
     @ManyToMany
     @JoinTable(name = "book_order_books",
         joinColumns = @JoinColumn(name = "order_id"),
         inverseJoinColumns = @JoinColumn(name ="book_id"))
-        @JsonIgnore
+    @JsonIgnore
     private List<Book> books;
 
     public BookOrder() {
