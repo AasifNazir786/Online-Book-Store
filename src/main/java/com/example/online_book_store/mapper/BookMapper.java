@@ -15,7 +15,7 @@ public interface BookMapper {
     BookDTO toDTO(Book book);
 
     // @Mapping(target = "books", ignore = true)
-    @Mapping(target = "author", ignore=true)
+    @Mapping(target = "author.authorId", source = "authorId")
     Book toEntity(BookDTO bookDTO);
 
     // @Named("authorFromAuthorId")

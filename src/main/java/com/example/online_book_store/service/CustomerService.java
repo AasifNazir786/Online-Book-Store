@@ -55,7 +55,7 @@ public CustomerDTO create(CustomerDTO customerDTO) {
             BookOrder bookOrder = orderMapper.toEntity(orderDTO);
             bookOrder.setCustomer(customer);
 
-            List<Integer> bookIDs = orderDTO.getBooksIDs();
+            List<Integer> bookIDs = orderDTO.getBookIDs();
             if (bookIDs != null && !bookIDs.isEmpty()) {
                 List<Book> books = new ArrayList<>();
                 for (int bookId : bookIDs) {
@@ -152,7 +152,7 @@ public CustomerDTO updateById(int id, CustomerDTO customerDTO) {
 
             // Set books for the order
             List<Book> books = new ArrayList<>();
-            for (Integer bookId : orderDTO.getBooksIDs()) {
+            for (Integer bookId : orderDTO.getBookIDs()) {
                 Book book = bookRepository.findById(bookId).orElseThrow(() ->
                     new EntityNotFoundException("Book not found with id: " + bookId));
                 books.add(book);
