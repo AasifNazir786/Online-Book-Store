@@ -9,7 +9,7 @@ public interface BaseRepository<T> {
 
     T getById(int id);
 
-    T update(int id, T dto);
+    T updateById(int id, T dto);
 
     void delete(int id);
 }

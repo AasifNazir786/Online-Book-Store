@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.online_book_store.model.Customer;
+import com.example.online_book_store.dto.CustomerDTO;
 import com.example.online_book_store.service.CustomerService;
 
 @RestController
@@ -24,48 +24,54 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    // Get all customers
-    @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers() {
-        List<Customer> customers = customerService.getAllCustomers();
-        return new ResponseEntity<>(customers, HttpStatus.OK);
+    @GetMapping("/all")
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers(){
+
+        List<CustomerDTO> listDTO = customerService.getAll();
+
+        if(listDTO == null || listDTO.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listDTO, HttpStatus.OK);
     }
 
-    // Get customer by ID
+    @PostMapping
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
+
+        CustomerDTO customerDTO1 = customerService.create(customerDTO);
+
+        if(customerDTO1 == null || customerDTO1.getCustomerEmail().isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(customerDTO1, HttpStatus.CREATED);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        Customer customer = customerService.getById(id);
-        if (customer != null) {
-            return new ResponseEntity<>(customer, HttpStatus.OK);
-        } else {
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable int id){
+
+        CustomerDTO customerDTO = customerService.getById(id);
+
+        if(customerDTO == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
     }
 
-    // Create a new customer
-    @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
-        try {
-            Customer savedCustomer = customerService.saveCustomer(customer);
-            return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable int id, @RequestBody CustomerDTO customerDTO){
+
+        CustomerDTO customerDTO1 = customerService.updateById(id, customerDTO);
+
+        if(customerDTO1 == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(customerDTO1, HttpStatus.OK);
     }
 
-
-    // Update an existing customer
-    @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable int id, @RequestBody Customer customer) {
-        customer.setCustomerId(id); // Assuming you set the ID for update
-        Customer updatedCustomer = customerService.saveCustomer(customer);
-        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable int id){
+        customerService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // Delete a customer by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable int id) {
-        customerService.deleteCustomer(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }

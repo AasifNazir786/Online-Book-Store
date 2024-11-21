@@ -17,7 +17,6 @@ import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.service_repository.AuthorRepo;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService implements AuthorRepo {
@@ -35,7 +34,7 @@ public class AuthorService implements AuthorRepo {
     private BookMapper bookMapper;
 
     @Override
-    public AuthorDTO createAuthorDTO(AuthorDTO authorDTO) {
+    public AuthorDTO create(AuthorDTO authorDTO) {
         Author author = authorRepository.findByAuthorName(authorDTO.getAuthorName());
 
         if (author == null) {
@@ -73,11 +72,11 @@ public class AuthorService implements AuthorRepo {
     }
 
     @Override
-    public List<AuthorDTO> getAllAuthorDTOs() {
+    public List<AuthorDTO> getAll() {
         List<AuthorDTO> authorDTOs = new ArrayList<>();
-        List<Author> authors = null;
+        // List<Author> authors = null;
         try {
-            authors = authorRepository.findAll();
+            List<Author> authors = authorRepository.findAll();
             if (authors != null && !authors.isEmpty()) {
                 for (Author author : authors) {
                     AuthorDTO authorDTO = authorMapper.toDTO(author);
@@ -105,7 +104,7 @@ public class AuthorService implements AuthorRepo {
     }
 
     @Override
-    public AuthorDTO getAuthorDTOById(int id) {
+    public AuthorDTO getById(int id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author Not found with id: " + id));
 
@@ -126,9 +125,8 @@ public class AuthorService implements AuthorRepo {
         return authorDTO;
     }
 
-
     @Override
-    public AuthorDTO updateAuthorDTO(int id, AuthorDTO authorDTO) {
+    public AuthorDTO updateById(int id, AuthorDTO authorDTO) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author not found with id: " + id));
 
@@ -193,11 +191,8 @@ public class AuthorService implements AuthorRepo {
         return savedAuthorDTO;
     }
 
-
     @Override
-    @Transactional
-    public void deleteAuthorDTO(int id) {
-
+    public void delete(int id) {
         if(!authorRepository.existsById(id)){
             throw new EntityNotFoundException("Author not found with id: " + id);
         }

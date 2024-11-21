@@ -32,32 +32,32 @@ public class AuthorController {
         if(authorDTO == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        AuthorDTO author = authorService.createAuthorDTO(authorDTO);
+        AuthorDTO author = authorService.create(authorDTO);
         return new ResponseEntity<>(author, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<AuthorDTO>> getAllAuthors(){
-        List<AuthorDTO> authors = authorService.getAllAuthorDTOs();
+        List<AuthorDTO> authors = authorService.getAll();
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable int id){
-        AuthorDTO author = authorService.getAuthorDTOById(id);
+        AuthorDTO author = authorService.getById(id);
         return new ResponseEntity<>(author, HttpStatus.OK);
     }
     
 
     @PutMapping("/update/{id}")
     public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable int id, @RequestBody AuthorDTO author){
-        AuthorDTO authorDTO = authorService.updateAuthorDTO(id, author);
+        AuthorDTO authorDTO = authorService.updateById(id, author);
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public void deleteAuthor(@PathVariable int id){
-        authorService.deleteAuthorDTO(id);
+        authorService.delete(id);
     }
 
 }

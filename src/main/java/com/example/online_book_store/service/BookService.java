@@ -27,69 +27,75 @@ public class BookService implements BookRepo {
     private BookMapper bookMapper;
 
     @Override
-    public BookDTO createBookDTO(BookDTO bookDTO) {
-        Author author = null;
-        try {
-            // Find the author by authorId (if exists)
-            author = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
+    public BookDTO create(BookDTO bookDTO) {
 
-            // If the author doesn't exist, create a new author and save
+        try {
+            
+            Author author = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
+
             if (author == null) {
                 author = new Author();
                 author.setAuthorId(bookDTO.getAuthorId());
-                authorRepository.save(author); // Save the new author
+                authorRepository.save(author);
             }
 
-            // Map the BookDTO to a Book entity
             Book book = bookMapper.toEntity(bookDTO);
-            book.setAuthor(author); // Associate the found or created author
+            book.setAuthor(author);
 
-            // Save the book entity
             Book savedBook = bookRepository.save(book);
 
-            // Convert the saved book entity to a BookDTO
             BookDTO savedBookDTO = bookMapper.toDTO(savedBook);
             savedBookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
 
             return savedBookDTO;
+
         } catch (Exception e) {
-            // Log the error and rethrow as appropriate
+            
             System.out.println("Error occurred while saving book: " + e.getMessage());
             throw new RuntimeException("Error occurred while saving book", e);
         }
     }
 
-
-
     @Override
-    public List<BookDTO> getAllBookDTOs() {
+    public List<BookDTO> getAll() {
         List<Book> books = bookRepository.findAll();
-        if(books != null){
-            List<BookDTO> bookDTOs = new ArrayList<>();
-            for(var book : books){
-                BookDTO bookDTO = bookMapper.toDTO(book);
-                int authId = book.getAuthor().getAuthorId();
-                bookDTO.setAuthorId(authId);
-                bookDTOs.add(bookDTO);
-            }
-            return bookDTOs;
+        List<BookDTO> bookDTOs = new ArrayList<>();
+
+        for(var book : books){
+
+            BookDTO bookDTO = bookMapper.toDTO(book);
+
+            int authId = book.getAuthor().getAuthorId();
+            bookDTO.setAuthorId(authId);
+
+            bookDTOs.add(bookDTO);
         }
-        return null;
+
+        return bookDTOs;
     }
 
+
+
     @Override
-    public BookDTO getBookDTOById(int id) {
-        return null;
+    public BookDTO getById(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 
+
+
     @Override
-    public BookDTO updateBookDTO(int id, BookDTO bookDTO) {
-        return null;
+    public BookDTO updateById(int id, BookDTO dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateById'");
     }
 
-    @Override
-    public void deleteBookDTO(int id) {
 
+
+    @Override
+    public void delete(int id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
 }
 

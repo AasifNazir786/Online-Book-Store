@@ -3,15 +3,15 @@ package com.example.online_book_store.dto;
 import java.util.List;
 
 public class CustomerDTO {
-    private int id;
+    private int customerId;
     private String customerName, customerEmail, customerAddress, phoneNumber;
     private List<OrderDTO> orders;
     
     public CustomerDTO() {}
 
-    public CustomerDTO(int id, String customerName, String customerEmail, String customerAddress, String phoneNumber,
+    public CustomerDTO(int customerId, String customerName, String customerEmail, String customerAddress, String phoneNumber,
             List<OrderDTO> orders) {
-        this.id = id;
+        this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerAddress = customerAddress;
@@ -19,9 +19,9 @@ public class CustomerDTO {
         this.orders = orders;
     }
 
-    public int getId() {return id;}
+    public int getCustomerId() {return customerId;}
 
-    public void setId(int id) {this.id = id;}
+    public void setCustomerId(int customerId) {this.customerId = customerId;}
 
     public String getCustomerName() {return customerName;}
 
@@ -50,7 +50,7 @@ public class CustomerDTO {
 
     @Override
     public String toString() {
-        return "CustomerDTO [id=" + id + ", customerName=" + customerName + ", customerEmail=" + customerEmail
+        return "CustomerDTO [id=" + customerId + ", customerName=" + customerName + ", customerEmail=" + customerEmail
                 + ", customerAddress=" + customerAddress + ", orders=" + orders + ", phoneNumber=" + phoneNumber +"]";
     }
 }
