@@ -14,7 +14,6 @@ import com.example.online_book_store.mapper.OrderMapper;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.model.BookOrder;
 import com.example.online_book_store.model.Customer;
-import com.example.online_book_store.repository.AuthorRepository;
 import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.repository.CustomerRepository;
 import com.example.online_book_store.service_repository.CustomerRepo;
@@ -26,9 +25,6 @@ public class CustomerService implements CustomerRepo{
     
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private AuthorRepository authorRepository;
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -103,7 +99,7 @@ public class CustomerService implements CustomerRepo{
 
     @Override
     public List<CustomerDTO> getAll() {
-        
+
         List<Customer> customers = customerRepository.findAll();
 
         return customers.stream()
@@ -141,7 +137,7 @@ public class CustomerService implements CustomerRepo{
     }
 
 
-   @Override
+    @Override
     public CustomerDTO getById(int id) {
 
         Customer customer = customerRepository.findById(id)
