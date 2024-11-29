@@ -1,7 +1,7 @@
 package com.example.online_book_store.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,8 @@ import com.example.online_book_store.model.Book;
 import com.example.online_book_store.repository.AuthorRepository;
 import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.service_repository.BookRepo;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BookService implements BookRepo {
@@ -29,47 +31,38 @@ public class BookService implements BookRepo {
     @Override
     public BookDTO create(BookDTO bookDTO) {
 
+        Book book = bookMapper.toEntity(bookDTO);
         try {
-            
-            Author author = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
-
-            if (author == null) {
-                author = new Author();
-                author.setAuthorId(bookDTO.getAuthorId());
-                authorRepository.save(author);
-            }
-
-            Book book = bookMapper.toEntity(bookDTO);
+            Author author = authorRepository.findById(bookDTO.getAuthorId())
+                .orElseThrow(() -> 
+                    new EntityNotFoundException("Author Not Found with id: "+bookDTO.getAuthorId())
+                );
             book.setAuthor(author);
 
-            Book savedBook = bookRepository.save(book);
-
-            BookDTO savedBookDTO = bookMapper.toDTO(savedBook);
-            savedBookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
-
-            return savedBookDTO;
-
         } catch (Exception e) {
-            
-            System.out.println("Error occurred while saving book: " + e.getMessage());
-            throw new RuntimeException("Error occurred while saving book", e);
+            throw new EntityNotFoundException(e);
         }
+        Book savedBook = bookRepository.save(book);
+        BookDTO saveBookDTO = bookMapper.toDTO(savedBook);
+
+        saveBookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
+
+        return saveBookDTO;
     }
 
     @Override
     public List<BookDTO> getAll() {
-        List<Book> books = bookRepository.findAll();
-        List<BookDTO> bookDTOs = new ArrayList<>();
 
-        for(var book : books){
+        List<BookDTO> bookDTOs = bookRepository.findAll()
+            .stream()
+            .map(book -> {
 
-            BookDTO bookDTO = bookMapper.toDTO(book);
+                BookDTO bookDTO = bookMapper.toDTO(book);
+                bookDTO.setAuthorId(book.getAuthor().getAuthorId());
 
-            int authId = book.getAuthor().getAuthorId();
-            bookDTO.setAuthorId(authId);
-
-            bookDTOs.add(bookDTO);
-        }
+                return bookDTO;
+            })
+            .collect(Collectors.toList());
 
         return bookDTOs;
     }
@@ -78,16 +71,48 @@ public class BookService implements BookRepo {
 
     @Override
     public BookDTO getById(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+
+        Book book = bookRepository.findById(id)
+
+                .orElseThrow(() -> 
+                    new EntityNotFoundException("Book Not found with id: "+id)
+                );
+        BookDTO bookDTO = bookMapper.toDTO(book);
+
+        bookDTO.setAuthorId(book.getAuthor().getAuthorId());
+
+        return bookDTO;
     }
 
 
 
     @Override
     public BookDTO updateById(int id, BookDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateById'");
+        
+        Book book = bookRepository.findById(id)
+                .orElseGet(() -> {
+
+                    Book newBook = bookMapper.toEntity(dto);
+                    Author author = null;
+
+                    if(dto.getAuthorId() != 0){
+
+                        author = authorRepository.findById(dto.getAuthorId())
+                            .orElseThrow(()-> new EntityNotFoundException("Author Not found with id: "+dto.getAuthorId()));
+                    }
+                    newBook.setAuthor(author);
+                    return newBook;
+                });
+        Book savedBook = bookRepository.save(book);
+
+        BookDTO bookDTO = bookMapper.toDTO(savedBook);
+
+        if(savedBook.getAuthor() != null){
+            
+            bookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
+        }
+
+        return bookDTO;
     }
 
 

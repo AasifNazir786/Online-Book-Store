@@ -38,7 +38,7 @@ public class BookOrder {
     @JsonBackReference
     private Customer customer;
     
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "book_order_books",
         joinColumns = @JoinColumn(name = "order_id"),
         inverseJoinColumns = @JoinColumn(name ="book_id"))

@@ -3,7 +3,7 @@ package com.example.online_book_store.service_repository;
 import java.util.List;
 
 public interface BaseRepository<T> {
-    T create(T dto);
+    T create(T dto) throws Exception;
 
     List<T> getAll();
 

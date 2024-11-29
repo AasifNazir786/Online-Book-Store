@@ -4,7 +4,10 @@ import java.util.List;
 
 public class CustomerDTO {
     private int customerId;
-    private String customerName, customerEmail, customerAddress, phoneNumber;
+    private String customerName;
+    private String customerEmail;
+    private String customerAddress;
+    private String phoneNumber;
     private List<OrderDTO> orders;
     
     public CustomerDTO() {}
@@ -40,17 +43,21 @@ public class CustomerDTO {
 
     public void setOrders(List<OrderDTO> orders) {this.orders = orders;}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    public String getPhoneNumber() {return phoneNumber;}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
     @Override
     public String toString() {
-        return "CustomerDTO [id=" + customerId + ", customerName=" + customerName + ", customerEmail=" + customerEmail
-                + ", customerAddress=" + customerAddress + ", orders=" + orders + ", phoneNumber=" + phoneNumber +"]";
+        return "CustomerDTO [" +
+
+                "id=" + customerId +
+                ", customerName=" + customerName +
+                ", customerEmail=" + customerEmail +
+                ", customerAddress=" + customerAddress +
+                ", orders=" + orders +
+                ", phoneNumber=" + phoneNumber +
+
+                "]";
     }
 }

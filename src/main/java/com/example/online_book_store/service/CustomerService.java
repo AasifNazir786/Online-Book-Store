@@ -11,7 +11,6 @@ import com.example.online_book_store.dto.CustomerDTO;
 import com.example.online_book_store.dto.OrderDTO;
 import com.example.online_book_store.mapper.CustomerMapper;
 import com.example.online_book_store.mapper.OrderMapper;
-import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.model.BookOrder;
 import com.example.online_book_store.model.Customer;
@@ -41,77 +40,140 @@ public class CustomerService implements CustomerRepo{
     private OrderMapper orderMapper;
 
     @Override
-public CustomerDTO create(CustomerDTO customerDTO) {
-    if (customerDTO == null) {
-        throw new IllegalArgumentException("CustomerDTO cannot be null");
-    }
+    public CustomerDTO create(CustomerDTO customerDTO) throws Exception {
 
-    Customer customer = customerMapper.toEntity(customerDTO);
-
-    if (customerDTO.getOrders() != null && !customerDTO.getOrders().isEmpty()) {
-        List<BookOrder> orderList = new ArrayList<>();
-
-        for (OrderDTO orderDTO : customerDTO.getOrders()) {
-            BookOrder bookOrder = orderMapper.toEntity(orderDTO);
-            bookOrder.setCustomer(customer);
-
-            List<Integer> bookIDs = orderDTO.getBookIDs();
-            if (bookIDs != null && !bookIDs.isEmpty()) {
-                List<Book> books = new ArrayList<>();
-                for (int bookId : bookIDs) {
-                    Book book = bookRepository.findById(bookId)
-                            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found"));
-                    
-                    Author author = authorRepository.findById(book.getAuthor().getAuthorId())
-                            .orElseThrow(() -> new IllegalArgumentException("Author with ID " + book.getAuthor().getAuthorId() + " not found"));
-                    book.setAuthor(author);
-                    
-                    books.add(book);
-                }
-                bookOrder.setBooks(books); 
-            }
-
-            orderList.add(bookOrder);
+        if(customerDTO == null){
+            throw new IllegalArgumentException("customer is null");
         }
+        Customer customer = customerMapper.toEntity(customerDTO);
 
-        customer.setOrders(orderList); 
+        if(customerDTO.getOrders() != null){
+
+            List<BookOrder> orders = customerDTO.getOrders()
+                .stream()
+                .map(orderDTO -> {
+
+                    BookOrder order = orderMapper.toEntity(orderDTO);
+                    order.setCustomer(customer);
+
+                    if(orderDTO.getBookIDs() != null){
+
+                        List<Book> books = bookRepository.findAllById(orderDTO.getBookIDs());
+                        if (books.size() != orderDTO.getBookIDs().size()) {
+                            try {
+                                throw new Exception("Some books not found for IDs: " + orderDTO.getBookIDs());
+                            } catch (Exception ex) {
+                                ex.getMessage();
+                            }
+                        }
+                        order.setBooks(books);
+                    }
+                    return order;
+                })
+                .collect(Collectors.toList());
+
+            customer.setOrders(orders);
+        }
+        Customer savedCustomer = customerRepository.save(customer);
+        CustomerDTO savedCustomerDTO = customerMapper.toDTO(savedCustomer);
+
+        if (savedCustomer.getOrders() != null) {
+            List<OrderDTO> orderDTOs = savedCustomer.getOrders()
+                .stream()
+                .map(order -> {
+
+                    OrderDTO orderDTO = orderMapper.toDTO(order);
+                    orderDTO.setCustomerId(order.getCustomer().getCustomerId());
+
+                    List<Integer> bookIDs = order.getBooks()
+                        .stream()
+                        .map(Book::getBookId)
+                        .collect(Collectors.toList());
+
+                    orderDTO.setBookIDs(bookIDs);
+
+                    return orderDTO;
+                })
+                .collect(Collectors.toList());
+    
+            savedCustomerDTO.setOrders(orderDTOs);
+        }
+        return savedCustomerDTO;
     }
-
-    Customer savedCustomer = customerRepository.save(customer);
-    return customerMapper.toDTO(savedCustomer);
-}
 
     @Override
     public List<CustomerDTO> getAll() {
+        
         List<Customer> customers = customerRepository.findAll();
 
-        List<CustomerDTO> customerDTOs = customers.stream()
+        return customers.stream()
             .map(customer -> {
                 CustomerDTO customerDTO = customerMapper.toDTO(customer);
 
-                List<OrderDTO> orderDTOs = customer.getOrders().stream()
-                        .map(order -> orderMapper.toDTO(order))
-                        .collect(Collectors.toList());
+                List<OrderDTO> orderDTOs = customer.getOrders() != null
+
+                    ? customer.getOrders().stream()
+                        .map(order -> {
+
+                            OrderDTO orderDTO = orderMapper.toDTO(order);
+                            orderDTO.setCustomerId(order.getCustomer().getCustomerId());
+
+                            List<Integer> bookIDs = order.getBooks() != null
+
+                                ? order.getBooks().stream()
+                                    .map(Book::getBookId)
+                                    .collect(Collectors.toList())
+
+                                : new ArrayList<>();
+
+                            orderDTO.setBookIDs(bookIDs);
+
+                            return orderDTO;
+                        })
+                        .collect(Collectors.toList())
+                    : new ArrayList<>();
 
                 customerDTO.setOrders(orderDTOs);
 
                 return customerDTO;
             })
             .collect(Collectors.toList());
-
-        return customerDTOs;
     }
 
-    @Override
+
+   @Override
     public CustomerDTO getById(int id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() ->
-            new EntityNotFoundException("Customer not found with id: " + id));
+
+        Customer customer = customerRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + id));
 
         CustomerDTO customerDTO = customerMapper.toDTO(customer);
 
-        List<OrderDTO> orderDTOs = customer.getOrders().stream()
-                .map(order -> orderMapper.toDTO(order))
-                .collect(Collectors.toList());
+        List<OrderDTO> orderDTOs = customer.getOrders() != null
+
+            ? customer.getOrders().stream()
+                .map(order -> {
+
+                    OrderDTO orderDTO = orderMapper.toDTO(order);
+                    orderDTO.setCustomerId(order.getCustomer().getCustomerId());
+
+                    List<Integer> bookIDs = order.getBooks() != null
+
+                        ? order.getBooks()
+
+                            .stream()
+                            .map(Book::getBookId)
+                            .collect(Collectors.toList())
+
+                        : new ArrayList<>();
+
+                    orderDTO.setBookIDs(bookIDs);
+
+                    return orderDTO;
+                })
+                .collect(Collectors.toList())
+
+            : new ArrayList<>();
 
         customerDTO.setOrders(orderDTOs);
 
@@ -119,60 +181,70 @@ public CustomerDTO create(CustomerDTO customerDTO) {
     }
 
     @Override
-public CustomerDTO updateById(int id, CustomerDTO customerDTO) {
-    Customer customer = customerRepository.findById(id).orElse(null);
+    public CustomerDTO updateById(int id, CustomerDTO customerDTO) {
+        Customer customer = customerRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + id));
 
-    if (customer == null) {
-        // Create a new customer if not found
-        customer = new Customer();
-        customer.setCustomerId(id); // Explicitly set the ID if necessary, depending on your database setup
-    }
+        customer.setCustomerName(customerDTO.getCustomerName());
+        customer.setCustomerEmail(customerDTO.getCustomerEmail());
+        customer.setCustomerAddress(customerDTO.getCustomerAddress());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber());
 
-    // Update customer fields
-    customer.setCustomerName(customerDTO.getCustomerName());
-    customer.setCustomerEmail(customerDTO.getCustomerEmail());
-    customer.setCustomerAddress(customerDTO.getCustomerAddress());
-    customer.setPhoneNumber(customerDTO.getPhoneNumber());
-
-    if (customerDTO.getOrders() != null) {
-        // Handle orders
-        List<BookOrder> customerOrders = customer.getOrders();
-
-        if (customerOrders == null) {
-            customerOrders = new ArrayList<>();
-            customer.setOrders(customerOrders);
-        } else {
-            customerOrders.clear(); // Clear existing orders
-        }
-
-        // Add updated orders
-        for (OrderDTO orderDTO : customerDTO.getOrders()) {
-            BookOrder bookOrder = orderMapper.toEntity(orderDTO);
-            bookOrder.setCustomer(customer);
-
-            // Set books for the order
-            List<Book> books = new ArrayList<>();
-            for (Integer bookId : orderDTO.getBookIDs()) {
-                Book book = bookRepository.findById(bookId).orElseThrow(() ->
-                    new EntityNotFoundException("Book not found with id: " + bookId));
-                books.add(book);
+        if (customerDTO.getOrders() != null) {
+        
+            List<BookOrder> customerOrders = customer.getOrders();
+            if (customerOrders == null) {
+                customerOrders = new ArrayList<>();
+                customer.setOrders(customerOrders);
+            } else {
+                customerOrders.clear();
             }
-            bookOrder.setBooks(books);
 
-            customerOrders.add(bookOrder); // Add to the orders collection
+            List<Integer> allBookIds = new ArrayList<>();
+            for (OrderDTO orderDTO : customerDTO.getOrders()) {
+                allBookIds.addAll(orderDTO.getBookIDs());
+            }
+
+            List<Book> books = bookRepository.findAllById(allBookIds);
+
+            List<Integer> foundBookIds = new ArrayList<>();
+            for (Book book : books) {
+                foundBookIds.add(book.getBookId());
+            }
+            for (Integer bookId : allBookIds) {
+                if (!foundBookIds.contains(bookId)) {
+                    throw new EntityNotFoundException("Book not found with ID: " + bookId);
+                }
+            }
+
+            for (OrderDTO orderDTO : customerDTO.getOrders()) {
+                BookOrder bookOrder = orderMapper.toEntity(orderDTO);
+                bookOrder.setCustomer(customer);
+
+                List<Book> orderBooks = new ArrayList<>();
+                for (Integer bookId : orderDTO.getBookIDs()) {
+                    for (Book book : books) {
+                        if (book.getBookId() == bookId) {
+                            orderBooks.add(book);
+                            break;
+                        }
+                    }
+                }
+                bookOrder.setBooks(orderBooks);
+
+                customerOrders.add(bookOrder);
+            }
         }
+
+        Customer savedCustomer = customerRepository.save(customer);
+        return customerMapper.toDTO(savedCustomer);
     }
 
-    // Save and return the customer
-    Customer savedCustomer = customerRepository.save(customer);
-    return customerMapper.toDTO(savedCustomer);
-}
 
-
-    
 
     @Override
     public void delete(int id) {
+        
         Customer existingCustomer = customerRepository.findById(id).orElseThrow(() ->
             new EntityNotFoundException("Customer not found with id: " + id));
 

@@ -3,6 +3,7 @@ package com.example.online_book_store.dto;
 import java.util.List;
 
 public class AuthorDTO {
+
     private int authorId;
     private String authorName;
     private String authorBiography;
@@ -10,11 +11,11 @@ public class AuthorDTO {
     private String awards;
     private List<BookDTO> books;
 
-    public AuthorDTO() {
-    }
+    public AuthorDTO() {}
 
-    public AuthorDTO(int authorId, String authorName, String authorBiography, String nationality, String awards,
-            List<BookDTO> books) {
+    public AuthorDTO(int authorId, String authorName, String authorBiography,
+                                    String nationality, String awards,List<BookDTO> books) {
+
         this.authorId = authorId;
         this.authorName = authorName;
         this.authorBiography = authorBiography;
@@ -73,8 +74,16 @@ public class AuthorDTO {
 
     @Override
     public String toString() {
-        return "AuthorDTO [authorId=" + authorId + ", authorName=" + authorName + ", authorBiography=" + authorBiography
-                + ", nationality=" + nationality + ", awards=" + awards + ", books=" + books + "]";
+
+        return "AuthorDTO [" +
+        
+        "authorId=" + authorId +
+        ", authorName=" + authorName +
+        ", authorBiography=" + authorBiography +
+        ", nationality=" + nationality +
+        ", awards=" + awards +
+        ", books=" + books +
+
+        "]";
     }
-    
 }

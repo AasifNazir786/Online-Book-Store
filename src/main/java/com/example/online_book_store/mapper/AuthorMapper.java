@@ -9,11 +9,9 @@ import com.example.online_book_store.model.Author;
 @Mapper(componentModel="spring", uses={BookMapper.class})
 public interface AuthorMapper {
 
-   // AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
    @Mapping(source = "books", target = "books")
    AuthorDTO toDTO(Author author);
 
-   @Mapping(source = "books", target = "books")
-   @Mapping(target="authorId", ignore=true)
+   @Mapping(target = "books", ignore=true)
    Author toEntity(AuthorDTO authorDTO);
 }

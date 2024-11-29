@@ -9,13 +9,10 @@ import com.example.online_book_store.model.Book;
 @Mapper(componentModel="spring")
 public interface BookMapper {
 
-    // BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
-
     @Mapping(source = "author.authorId", target = "authorId")
     BookDTO toDTO(Book book);
 
-    // @Mapping(target = "books", ignore = true)
-    @Mapping(target = "author.authorId", source = "authorId")
+    @Mapping(target = "author", ignore=true)
     Book toEntity(BookDTO bookDTO);
 
     // @Named("authorFromAuthorId")

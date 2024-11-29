@@ -30,17 +30,19 @@ public class CustomerController {
         List<CustomerDTO> listDTO = customerService.getAll();
 
         if(listDTO == null || listDTO.isEmpty()){
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) throws Exception{
 
         CustomerDTO customerDTO1 = customerService.create(customerDTO);
 
         if(customerDTO1 == null || customerDTO1.getCustomerEmail().isEmpty()){
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(customerDTO1, HttpStatus.CREATED);
@@ -52,6 +54,7 @@ public class CustomerController {
         CustomerDTO customerDTO = customerService.getById(id);
 
         if(customerDTO == null){
+
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(customerDTO, HttpStatus.OK);
@@ -63,6 +66,7 @@ public class CustomerController {
         CustomerDTO customerDTO1 = customerService.updateById(id, customerDTO);
 
         if(customerDTO1 == null){
+            
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(customerDTO1, HttpStatus.OK);
@@ -70,7 +74,9 @@ public class CustomerController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable int id){
+
         customerService.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
