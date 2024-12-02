@@ -34,7 +34,7 @@ public class BookService implements BookRepo {
         Book book = bookMapper.toEntity(bookDTO);
         try {
             Author author = authorRepository.findById(bookDTO.getAuthorId())
-                .orElseThrow(() -> 
+                .orElseThrow(() ->
                     new EntityNotFoundException("Author Not Found with id: "+bookDTO.getAuthorId())
                 );
             book.setAuthor(author);
@@ -67,14 +67,12 @@ public class BookService implements BookRepo {
         return bookDTOs;
     }
 
-
-
     @Override
     public BookDTO getById(int id) {
 
         Book book = bookRepository.findById(id)
 
-                .orElseThrow(() -> 
+                .orElseThrow(() ->
                     new EntityNotFoundException("Book Not found with id: "+id)
                 );
         BookDTO bookDTO = bookMapper.toDTO(book);
@@ -84,25 +82,30 @@ public class BookService implements BookRepo {
         return bookDTO;
     }
 
-
-
     @Override
     public BookDTO updateById(int id, BookDTO dto) {
         
         Book book = bookRepository.findById(id)
-                .orElseGet(() -> {
+                                        .orElseGet(() -> {
 
-                    Book newBook = bookMapper.toEntity(dto);
-                    Author author = null;
+            Book newBook = bookMapper.toEntity(dto);
+            return newBook;
+        });
+            
+        Author author = null;
 
-                    if(dto.getAuthorId() != 0){
+        if(dto.getAuthorId() != 0){
 
-                        author = authorRepository.findById(dto.getAuthorId())
-                            .orElseThrow(()-> new EntityNotFoundException("Author Not found with id: "+dto.getAuthorId()));
-                    }
-                    newBook.setAuthor(author);
-                    return newBook;
-                });
+            author = authorRepository.findById(dto.getAuthorId())
+                .orElseThrow(()-> new EntityNotFoundException("Author Not found with id: "+dto.getAuthorId()));
+        }
+        book.setAuthor(author);
+        book.setBookPrice(dto.getBookPrice());
+        book.setBookStock(dto.getBookStock());
+        book.setBookTitle(dto.getBookTitle());
+        book.setGenre(dto.getGenre());
+        book.setPublicationDate(dto.getPublicationDate());
+
         Book savedBook = bookRepository.save(book);
 
         BookDTO bookDTO = bookMapper.toDTO(savedBook);
@@ -115,12 +118,11 @@ public class BookService implements BookRepo {
         return bookDTO;
     }
 
-
-
     @Override
     public void delete(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+
+        bookRepository.deleteById(id);
+
     }
 }
 

@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.online_book_store.mapper.BookMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.online_book_store.dto.OrderDTO;
 import com.example.online_book_store.mapper.OrderMapper;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.model.BookOrder;
@@ -12,28 +15,25 @@ import com.example.online_book_store.model.Customer;
 import com.example.online_book_store.repository.BookOrderRepository;
 import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.repository.CustomerRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.online_book_store.dto.OrderDTO;
 import com.example.online_book_store.service_repository.OrderRepo;
+
+import jakarta.persistence.EntityNotFoundException;
 
 
 @Service
 public class BookOrderService implements OrderRepo{
 
-     @Autowired
-     private BookOrderRepository bookOrderRepository;
+    @Autowired
+    private BookOrderRepository bookOrderRepository;
 
-     @Autowired
-     private OrderMapper orderMapper;
+    @Autowired
+    private OrderMapper orderMapper;
 
-     @Autowired
-     private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-     @Autowired
-     private BookRepository bookRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Override
     public OrderDTO create(OrderDTO dto) {
@@ -53,11 +53,12 @@ public class BookOrderService implements OrderRepo{
         if (books.size() != dto.getBookIDs().size()) {
             throw new EntityNotFoundException("Some books not found for IDs: " + dto.getBookIDs());
         }
-        bookOrder.getBooks().clear();
         bookOrder.setBooks(books);
 
         BookOrder savedOrder = bookOrderRepository.save(bookOrder);
         OrderDTO savedDTO = orderMapper.toDTO(savedOrder);
+
+        savedDTO.setOrderId(savedDTO.getOrderId());
 
         if (savedOrder.getCustomer() != null) {
             savedDTO.setCustomerId(savedOrder.getCustomer().getCustomerId());

@@ -14,6 +14,7 @@ import com.example.online_book_store.mapper.OrderMapper;
 import com.example.online_book_store.model.Book;
 import com.example.online_book_store.model.BookOrder;
 import com.example.online_book_store.model.Customer;
+import com.example.online_book_store.repository.BookOrderRepository;
 import com.example.online_book_store.repository.BookRepository;
 import com.example.online_book_store.repository.CustomerRepository;
 import com.example.online_book_store.service_repository.CustomerRepo;
@@ -25,6 +26,9 @@ public class CustomerService implements CustomerRepo{
     
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private BookOrderRepository orderRepository;
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -243,6 +247,13 @@ public class CustomerService implements CustomerRepo{
         
         Customer existingCustomer = customerRepository.findById(id).orElseThrow(() ->
             new EntityNotFoundException("Customer not found with id: " + id));
+
+        if(existingCustomer.getOrders() != null){
+            for(var order : existingCustomer.getOrders()){
+                int OrderId = order.getOrderId();
+                orderRepository.deleteById(OrderId);
+            }
+        }
 
         customerRepository.delete(existingCustomer);
     }
