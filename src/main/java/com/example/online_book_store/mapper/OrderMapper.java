@@ -9,8 +9,8 @@ import com.example.online_book_store.model.BookOrder;
 @Mapper(componentModel="spring")
 public interface OrderMapper {
 
-    @Mapping(source="customer.customerId", target="customerId")
-    @Mapping(target="bookIDs", expression="java(order.getBooks().stream().map(book -> book.getBookId()).toList())")
+    @Mapping(target="customerId", ignore = true)
+    @Mapping(target="bookIDs", ignore = true)//expression="java(order.getBooks().stream().map(book -> book.getBookId()).toList())")
     OrderDTO toDTO(BookOrder order);
     
     @Mapping(target = "customer", ignore = true) // set it explicitly/manually

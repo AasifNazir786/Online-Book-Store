@@ -31,55 +31,32 @@ public class BookService implements BookRepo {
     @Override
     public BookDTO create(BookDTO bookDTO) {
 
-        Book book = bookMapper.toEntity(bookDTO);
-        try {
-            Author author = authorRepository.findById(bookDTO.getAuthorId())
-                .orElseThrow(() ->
-                    new EntityNotFoundException("Author Not Found with id: "+bookDTO.getAuthorId())
-                );
-            book.setAuthor(author);
+        if (bookDTO == null) {
 
-        } catch (Exception e) {
-            throw new EntityNotFoundException(e);
+            throw new IllegalArgumentException("BookDTO cannot be null");
         }
+        Book book = mapDtoToBook(bookDTO);
         Book savedBook = bookRepository.save(book);
-        BookDTO saveBookDTO = bookMapper.toDTO(savedBook);
-
-        saveBookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
-
-        return saveBookDTO;
+        return mapBookToDTO(savedBook);
     }
 
     @Override
     public List<BookDTO> getAll() {
 
-        List<BookDTO> bookDTOs = bookRepository.findAll()
+        return bookRepository.findAll()
             .stream()
-            .map(book -> {
-
-                BookDTO bookDTO = bookMapper.toDTO(book);
-                bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-
-                return bookDTO;
-            })
+            .map(this::mapBookToDTO)
             .collect(Collectors.toList());
-
-        return bookDTOs;
     }
 
     @Override
     public BookDTO getById(int id) {
 
         Book book = bookRepository.findById(id)
-
                 .orElseThrow(() ->
                     new EntityNotFoundException("Book Not found with id: "+id)
                 );
-        BookDTO bookDTO = bookMapper.toDTO(book);
-
-        bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-
-        return bookDTO;
+        return mapBookToDTO(book);
     }
 
     @Override
@@ -108,21 +85,41 @@ public class BookService implements BookRepo {
 
         Book savedBook = bookRepository.save(book);
 
-        BookDTO bookDTO = bookMapper.toDTO(savedBook);
-
-        if(savedBook.getAuthor() != null){
-            
-            bookDTO.setAuthorId(savedBook.getAuthor().getAuthorId());
-        }
-
-        return bookDTO;
+        return mapBookToDTO(savedBook);
     }
 
     @Override
     public void delete(int id) {
-
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Book not found with id: " + id);
+        }
         bookRepository.deleteById(id);
+    }
 
+    // Helper functions for above methods
+    private BookDTO mapBookToDTO(Book book){
+        BookDTO bookDTO = bookMapper.toDTO(book);
+
+        if(book.getAuthor().getAuthorId() != 0)
+            bookDTO.setAuthorId(book.getAuthor().getAuthorId());
+        else
+            bookDTO.setAuthorId(0);
+        return bookDTO;
+    }
+
+    private Book mapDtoToBook(BookDTO bookDTO){
+        Book book = bookMapper.toEntity(bookDTO);
+        try {
+            Author author = authorRepository.findById(bookDTO.getAuthorId())
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("Author Not Found with id: "+bookDTO.getAuthorId())
+                    );
+            book.setAuthor(author);
+
+        } catch (Exception e) {
+            throw new EntityNotFoundException(e);
+        }
+        return book;
     }
 }
 

@@ -9,7 +9,7 @@ import com.example.online_book_store.model.Book;
 @Mapper(componentModel="spring")
 public interface BookMapper {
 
-    @Mapping(source = "author.authorId", target = "authorId")
+    @Mapping(target = "authorId", ignore = true)
     BookDTO toDTO(Book book);
 
     @Mapping(target = "author", ignore=true)

@@ -12,18 +12,18 @@ import java.util.List;
 @Mapper(componentModel="spring", uses = {OrderMapper.class})
 public interface CustomerMapper {
 
-    @Mapping(source = "orders", target = "orders")
+    @Mapping(target = "orders", ignore = true)
     CustomerDTO toDTO(Customer customer);
 
-    @Mapping(target="orders", ignore=true)
+    @Mapping(target="orders", ignore = true)
     Customer toEntity(CustomerDTO customerDTO);
 
     // Custom method to map orders separately
-    default Customer toEntityWithOrders(CustomerDTO customerDTO, List<BookOrder> orders) {
-        Customer customer = toEntity(customerDTO);
-        if (customer != null) {
-            customer.setOrders(orders);
-        }
-        return customer;
-    }
+//    default Customer toEntityWithOrders(CustomerDTO customerDTO, List<BookOrder> orders) {
+//        Customer customer = toEntity(customerDTO);
+//        if (customer != null) {
+//            customer.setOrders(orders);
+//        }
+//        return customer;
+//    }
 }

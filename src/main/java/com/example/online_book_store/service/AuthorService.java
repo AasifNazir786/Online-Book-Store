@@ -26,82 +26,34 @@ public class AuthorService implements AuthorRepo {
     private AuthorRepository authorRepository;
 
     @Autowired
-    private BookRepository bookRepository;
+    BookRepository bookRepository;
 
     @Autowired
-    private AuthorMapper authorMapper;
+    AuthorMapper authorMapper;
 
     @Autowired
-    private BookMapper bookMapper;
+    BookMapper bookMapper;
 
     @Override
     public AuthorDTO create(AuthorDTO authorDTO) {
 
         Author author = authorMapper.toEntity(authorDTO);
-
         if (authorDTO.getBooks() != null) {
-            List<Book> books = authorDTO.getBooks()
-                .stream()
-                .map(bookDTO -> {
-                    Book book = bookRepository.findById(bookDTO.getBookId())
-                        .orElseGet(() -> bookMapper.toEntity(bookDTO));
-                        book.setAuthor(author);
-                        return book;
-                })
-                .collect(Collectors.toList());
 
+            List<Book> books = mapBookDTOsToBooks(authorDTO.getBooks(), author);
             author.setBooks(books);
         }
         Author savedAuthor = authorRepository.save(author);
 
-        AuthorDTO savedAuthorDTO = authorMapper.toDTO(savedAuthor);
-
-        List<BookDTO> bookDTOs = savedAuthor.getBooks()
-            .stream()
-            .map(book -> {
-                BookDTO bookDTO = bookMapper.toDTO(book);
-                bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-                return bookDTO;
-            })
-            .collect(Collectors.toList());
-
-        savedAuthorDTO.setBooks(bookDTOs);
-
-        return savedAuthorDTO;
+        return mapAuthorToDTOWithBooks(savedAuthor);
     }
 
     @Override
     public List<AuthorDTO> getAll() {
-        List<AuthorDTO> authorDTOs = new ArrayList<>();
-        // List<Author> authors = null;
-        try {
-            List<Author> authors = authorRepository.findAll();
-            if (authors != null && !authors.isEmpty()) {
-                for (Author author : authors) {
-                    AuthorDTO authorDTO = authorMapper.toDTO(author);
-
-                    List<BookDTO> bookDTOs;
-                    if (author.getBooks() != null && !author.getBooks().isEmpty()) {
-                        bookDTOs = author.getBooks()
-                            .stream()
-                            .map(book ->{
-                                BookDTO bookDTO = bookMapper.toDTO(book);
-                                bookDTO.setAuthorId(author.getAuthorId());
-                                return bookDTO;
-                            })
-                            .collect(Collectors.toList());
-                        
-                        authorDTO.setBooks(bookDTOs);
-                    }
-                    authorDTOs.add(authorDTO);
-                }
-            } else {
-                System.out.println("No authors found.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error fetching authors: " + e.getMessage());
-        }
-        return authorDTOs;
+        return authorRepository.findAll()
+                .stream()
+                .map(this::mapAuthorToDTOWithBooks)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -109,24 +61,7 @@ public class AuthorService implements AuthorRepo {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author Not found with id: " + id));
 
-        AuthorDTO authorDTO = authorMapper.toDTO(author);
-
-        List<BookDTO> bookDTOs;
-
-        if (author.getBooks() != null && !author.getBooks().isEmpty()) {
-
-            bookDTOs = author.getBooks()
-                .stream()
-                .map(book -> {
-                    BookDTO bookDTO = bookMapper.toDTO(book);
-                    bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-                    return bookDTO;
-                })
-                .collect(Collectors.toList());
-        
-            authorDTO.setBooks(bookDTOs);
-        }
-        return authorDTO;
+       return mapAuthorToDTOWithBooks(author);
     }
 
     @Override
@@ -134,10 +69,8 @@ public class AuthorService implements AuthorRepo {
 
         Author author = authorRepository.findById(id)
                 .orElseGet(() -> {
-
                     Author newAuthor = authorMapper.toEntity(authorDTO);
                     newAuthor.setAuthorId(id);
-
                     return newAuthor;
                 });
 
@@ -146,137 +79,63 @@ public class AuthorService implements AuthorRepo {
         author.setNationality(authorDTO.getNationality());
         author.setAwards(authorDTO.getAwards());
 
-        if (authorDTO.getBooks() != null) {
-            List<Book> books = authorDTO.getBooks()
-                .stream()
+        if (authorDTO.getBooks() != null && !authorDTO.getBooks().isEmpty()) {
+            List<Book> books = mapBookDTOsToBooks(authorDTO.getBooks(), author);
+            author.setBooks(books);
+        }
+        Author savedAuthor = authorRepository.save(author);
+        return mapAuthorToDTOWithBooks(savedAuthor);
+    }
+
+    @Override
+    public void delete(int id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Author not found with id: " + id));
+        authorRepository.delete(author); // Assuming cascade delete is configured for books
+    }
+
+    //Helper functions for above CRUD operations
+    private List<Book> mapBookDTOsToBooks(List<BookDTO> bookDTOs, Author author) {
+        return bookDTOs.stream()
                 .map(bookDTO -> {
-
                     Book book = bookDTO.getBookId() != 0
-
-                    ? bookRepository.findById(bookDTO.getBookId())
-                        .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookDTO.getBookId()))
-
-                    : bookMapper.toEntity(bookDTO);
-
+                        ? bookRepository.findById(bookDTO.getBookId())
+                            .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookDTO.getBookId()))
+                        : bookMapper.toEntity(bookDTO);
                     book.setBookTitle(bookDTO.getBookTitle());
                     book.setBookPrice(bookDTO.getBookPrice());
                     book.setBookStock(bookDTO.getBookStock());
                     book.setGenre(bookDTO.getGenre());
                     book.setPublicationDate(bookDTO.getPublicationDate());
-
-                    Author bookAuthor = authorRepository.findById(bookDTO.getAuthorId()).orElse(author);
-                    
-                        book.setAuthor(bookAuthor);
-
+                    book.setAuthor(author);
                     return book;
                 })
                 .collect(Collectors.toList());
-
-            author.setBooks(books);
-        }
-
-        Author savedAuthor = authorRepository.save(author);
-
-        AuthorDTO savedAuthorDTO = authorMapper.toDTO(savedAuthor);
-
-        List<BookDTO> bookDTOs = savedAuthor.getBooks()
-            .stream()
-            .map(book -> {
-
-            BookDTO bookDTO = bookMapper.toDTO(book);
-            bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-
-            return bookDTO;
-            
-        }).collect(Collectors.toList());
-
-        savedAuthorDTO.setBooks(bookDTOs);
-
-        return savedAuthorDTO;
     }
 
-    // @Override
-    // public AuthorDTO updateById(int id, AuthorDTO authorDTO) {
-    //     Author author = authorRepository.findById(id)
-    //             .orElseThrow(() -> new EntityNotFoundException("Author not found with id: " + id));
 
-    //     author.setAuthorName(authorDTO.getAuthorName());
-    //     author.setAuthorBiography(authorDTO.getAuthorBiography());
-    //     author.setNationality(authorDTO.getNationality());
-    //     author.setAwards(authorDTO.getAwards());
+    private List<BookDTO> mapBooksToBookDTOs(List<Book> books) {
+        return books.stream()
+                .map(book -> {
+                    BookDTO bookDTO = bookMapper.toDTO(book);
 
-    //     if (authorDTO.getBooks() != null) {
-    //         List<Book> books = new ArrayList<>();
-
-    //         for (BookDTO bookDTO : authorDTO.getBooks()) {
-    //             Book book;
-    //             if (bookDTO.getBookId() != 0) {
-    //                 book = bookRepository.findById(bookDTO.getBookId())
-    //                         .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookDTO.getBookId()));
-
-    //                 book.setBookTitle(bookDTO.getBookTitle());
-    //                 book.setBookPrice(bookDTO.getBookPrice());
-    //                 book.setBookStock(bookDTO.getBookStock());
-    //                 book.setGenre(bookDTO.getGenre());
-    //                 book.setPublicationDate(bookDTO.getPublicationDate());
-
-    //                 Author bookAuthor = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
-    //                 if (bookAuthor != null) {
-    //                     book.setAuthor(bookAuthor);
-    //                 } else {
-    //                     throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorId());
-    //                 }
-
-    //             } else {
-    //                 book = bookMapper.toEntity(bookDTO);
-
-    //                 Author bookAuthor = authorRepository.findById(bookDTO.getAuthorId()).orElse(null);
-    //                 if (bookAuthor != null) {
-    //                     book.setAuthor(bookAuthor);
-    //                 } else {
-    //                     throw new EntityNotFoundException("Author not found with name: " + bookDTO.getAuthorId());
-    //                 }
-    //             }
-
-    //             book.setAuthor(author);
-    //             books.add(book);
-    //         }
-
-    //         author.setBooks(books);
-    //     }
-
-    //     Author savedAuthor = authorRepository.save(author);
-
-    //     AuthorDTO savedAuthorDTO = authorMapper.toDTO(savedAuthor);
-
-    //     List<BookDTO> bookDTOs = new ArrayList<>();
-    //     for (Book book : savedAuthor.getBooks()) {
-    //         BookDTO bookDTO = bookMapper.toDTO(book);
-    //         bookDTO.setAuthorId(book.getAuthor().getAuthorId());
-    //         bookDTOs.add(bookDTO);
-    //     }
-
-    //     savedAuthorDTO.setBooks(bookDTOs);
-
-    //     return savedAuthorDTO;
-    // }
-
-
-    @Override
-    public void delete(int id) {
-        if(!authorRepository.existsById(id)){
-            throw new EntityNotFoundException("Author not found with id: " + id);
-        }
-
-        Author author = authorRepository.findById(id).orElse(null);
-
-        if(author != null){
-            for(Book book : author.getBooks()){
-                bookRepository.deleteById(book.getBookId());
-            }
-            bookRepository.deleteAll(author.getBooks());
-        }
-        authorRepository.deleteById(id);
+                    if(book.getAuthor() != null)
+                        bookDTO.setAuthorId(book.getAuthor().getAuthorId());
+                    bookDTO.setBookPrice(book.getBookPrice());
+                    return bookDTO;
+                })
+                .collect(Collectors.toList());
     }
-    
+
+    private AuthorDTO mapAuthorToDTOWithBooks(Author author) {
+
+        AuthorDTO authorDTO = authorMapper.toDTO(author);
+
+        if (author.getBooks() != null && !author.getBooks().isEmpty()) {
+            List<BookDTO> bookDTOs = mapBooksToBookDTOs(author.getBooks());
+            authorDTO.setBooks(bookDTOs);
+        }
+        return authorDTO;
+    }
+
 }

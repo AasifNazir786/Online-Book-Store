@@ -36,7 +36,7 @@ public class Author {
     @Column(name = "awards")
     private String awards;
 
-    @OneToMany(mappedBy = "author", cascade = {CascadeType.MERGE, CascadeType.PERSIST},fetch=FetchType.EAGER, orphanRemoval=true)
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.MERGE, CascadeType.PERSIST},fetch=FetchType.EAGER, orphanRemoval=false)
     @JsonManagedReference
     private List<Book> books;
 

@@ -1,4 +1,4 @@
-package com.example.online_book_store.service_repository;
+package com.example.online_book_store.Generics;
 
 import java.util.List;
 
