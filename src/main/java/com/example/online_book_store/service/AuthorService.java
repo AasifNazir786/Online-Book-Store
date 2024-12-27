@@ -1,6 +1,5 @@
 package com.example.online_book_store.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +60,7 @@ public class AuthorService implements AuthorRepo {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author Not found with id: " + id));
 
-       return mapAuthorToDTOWithBooks(author);
+        return mapAuthorToDTOWithBooks(author);
     }
 
     @Override
