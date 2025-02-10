@@ -7,7 +7,6 @@ com/example/online_book_store/mapper/BookMapperImpl.class
 com/example/online_book_store/service_repository/AuthorRepo.class
 com/example/online_book_store/model/Customer.class
 com/example/online_book_store/controller/CustomerController.class
-com/example/online_book_store/service_repository/BaseRepository.class
 com/example/online_book_store/service/CustomerService.class
 com/example/online_book_store/model/Book.class
 com/example/online_book_store/dto/CustomerDTO.class
@@ -28,6 +27,7 @@ com/example/online_book_store/model/Author.class
 com/example/online_book_store/repository/BookRepository.class
 com/example/online_book_store/service_repository/BookRepo.class
 com/example/online_book_store/service/BookService.class
+com/example/online_book_store/Generics/BaseRepository.class
 com/example/online_book_store/repository/BookOrderRepository.class
 com/example/online_book_store/mapper/CustomerMapper.class
 com/example/online_book_store/model/BookOrder.class
