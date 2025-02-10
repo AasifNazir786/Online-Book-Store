@@ -1,6 +1,5 @@
 package com.example.online_book_store.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +7,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,14 +19,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "cart")
-public class Cart {
+@Table(name = "reviews")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne // LAZY Fetching By Default.....
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,8 +33,11 @@ public class Cart {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Column(name = "quantity", nullable = false)
-    @Positive(message = "Quantity must be positive")
-    private int quantity;
-}
+    @NotNull
+    @Min(1)
+    @Max(5)
+    private Integer rating;
 
+    @Size(max = 500)
+    private String comment;
+}

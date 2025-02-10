@@ -1,5 +1,7 @@
 package com.example.online_book_store.model;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
@@ -12,109 +14,47 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "books")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "bookId")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
-    private int bookId;
+    private Long id;
 
-    @Column(name = "book_title")
+    @Column(name = "book_title", nullable = false)
+    @NotBlank(message = "Book title is required")
     private String bookTitle;
 
-    @Column(name = "book_stock")
+    @Column(name = "book_stock", nullable = false)
+    @PositiveOrZero
     private int bookStock;
 
-    @Column(name = "book_price")
+    @Column(name = "book_price", nullable = false)
+    @Positive(message = "Price must be positive")
     private double bookPrice;
 
+    @NotBlank
     @Column(name = "genre")
     private String genre;
 
+    @NotNull
     @Column(name = "publication_date")
-    private String publicationDate;
+    private LocalDate publicationDate;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable=false)
     @JsonBackReference
     private Author author;
-
-    public Book() {
-    }
-
-    public Book(int bookId, String bookTitle, int bookStock, double bookPrice, String genre, String publicationDate,
-            Author author) {
-        this.bookId = bookId;
-        this.bookTitle = bookTitle;
-        this.bookStock = bookStock;
-        this.bookPrice = bookPrice;
-        this.genre = genre;
-        this.publicationDate = publicationDate;
-        this.author = author;
-    }
-
-    public int getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
-
-    public String getBookTitle() {
-        return bookTitle;
-    }
-
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
-    }
-
-    public int getBookStock() {
-        return bookStock;
-    }
-
-    public void setBookStock(int bookStock) {
-        this.bookStock = bookStock;
-    }
-
-    public double getBookPrice() {
-        return bookPrice;
-    }
-
-    public void setBookPrice(double bookPrice) {
-        this.bookPrice = bookPrice;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(String publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
-    @Override
-    public String toString() {
-        return "Book [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookStock=" + bookStock + ", bookPrice="
-                + bookPrice + ", genre=" + genre + ", publicationDate=" + publicationDate + "]";
-    }
 }
