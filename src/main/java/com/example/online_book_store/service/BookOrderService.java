@@ -1,142 +1,142 @@
-package com.example.online_book_store.service;
+// package com.example.online_book_store.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
-import com.example.online_book_store.dto.OrderDTO;
-import com.example.online_book_store.mapper.OrderMapper;
-import com.example.online_book_store.model.Book;
-import com.example.online_book_store.model.BookOrder;
-import com.example.online_book_store.model.Customer;
-import com.example.online_book_store.repository.BookOrderRepository;
-import com.example.online_book_store.repository.BookRepository;
-import com.example.online_book_store.repository.CustomerRepository;
-import com.example.online_book_store.service_repository.OrderRepo;
+// import com.example.online_book_store.dto.OrderDTO;
+// import com.example.online_book_store.mapper.OrderMapper;
+// import com.example.online_book_store.model.Book;
+// import com.example.online_book_store.model.BookOrder;
+// import com.example.online_book_store.model.Customer;
+// import com.example.online_book_store.repository.BookOrderRepository;
+// import com.example.online_book_store.repository.BookRepository;
+// import com.example.online_book_store.repository.CustomerRepository;
+// import com.example.online_book_store.service_repository.OrderRepo;
 
-import jakarta.persistence.EntityNotFoundException;
-
-
-@Service
-public class BookOrderService implements OrderRepo{
-
-    @Autowired
-    private BookOrderRepository bookOrderRepository;
-
-    @Autowired
-    private OrderMapper orderMapper;
-
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Override
-    public OrderDTO create(OrderDTO dto) {
-
-        BookOrder bookOrder = orderMapper.toEntity(dto);
-        if(dto.getCustomerId() != 0)
-            bookOrder.setCustomer(validateAndRetrieveCustomer(dto.getCustomerId()));
-
-        if(dto.getBookIDs() != null || !dto.getBookIDs().isEmpty())
-            bookOrder.setBooks(validateAndRetrieveBooks(dto.getBookIDs()));
-
-        BookOrder savedOrder = bookOrderRepository.save(bookOrder);
-        return mapOrderToDTO(savedOrder);
-    }
-
-    @Override
-    public List<OrderDTO> getAll() {
-        return bookOrderRepository.findAll()
-                .stream()
-                .map(this::mapOrderToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public OrderDTO getById(int id) {
-
-        BookOrder bookOrder = bookOrderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
-
-        return mapOrderToDTO(bookOrder);
-    }
+// import jakarta.persistence.EntityNotFoundException;
 
 
-    @Override
-    public OrderDTO updateById(int id, OrderDTO dto) {
+// @Service
+// public class BookOrderService implements OrderRepo{
 
-        BookOrder existingOrder = bookOrderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
+//     @Autowired
+//     private BookOrderRepository bookOrderRepository;
 
-        existingOrder.setOrderDate(dto.getOrderDate());
-        existingOrder.setQuantity(dto.getQuantity());
-        if(dto.getCustomerId() != 0) {
-            Customer customer = validateAndRetrieveCustomer(dto.getCustomerId());
-            existingOrder.setCustomer(customer);
-        }
+//     @Autowired
+//     private OrderMapper orderMapper;
 
-        if(dto.getBookIDs() != null || !dto.getBookIDs().isEmpty()) {
-            existingOrder.setBooks(validateAndRetrieveBooks(dto.getBookIDs()));
-        }
+//     @Autowired
+//     private CustomerRepository customerRepository;
 
-        BookOrder updatedOrder = bookOrderRepository.save(existingOrder);
+//     @Autowired
+//     private BookRepository bookRepository;
 
-        return mapOrderToDTO(updatedOrder);
-    }
+//     @Override
+//     public OrderDTO create(OrderDTO dto) {
+
+//         BookOrder bookOrder = orderMapper.toEntity(dto);
+//         if(dto.getCustomerId() != 0)
+//             bookOrder.setCustomer(validateAndRetrieveCustomer(dto.getCustomerId()));
+
+//         if(dto.getBookIDs() != null || !dto.getBookIDs().isEmpty())
+//             bookOrder.setBooks(validateAndRetrieveBooks(dto.getBookIDs()));
+
+//         BookOrder savedOrder = bookOrderRepository.save(bookOrder);
+//         return mapOrderToDTO(savedOrder);
+//     }
+
+//     @Override
+//     public List<OrderDTO> getAll() {
+//         return bookOrderRepository.findAll()
+//                 .stream()
+//                 .map(this::mapOrderToDTO)
+//                 .collect(Collectors.toList());
+//     }
+
+//     @Override
+//     public OrderDTO getById(int id) {
+
+//         BookOrder bookOrder = bookOrderRepository.findById(id)
+//                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
+
+//         return mapOrderToDTO(bookOrder);
+//     }
 
 
-    @Override
-    public void delete(int id) {
+//     @Override
+//     public OrderDTO updateById(int id, OrderDTO dto) {
 
-        if (!bookOrderRepository.existsById(id)) {
-            throw new EntityNotFoundException("Order not found with id: " + id);
-        }
-        bookOrderRepository.deleteById(id);
-    }
+//         BookOrder existingOrder = bookOrderRepository.findById(id)
+//                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
 
-    // Helper functions for above Crud Operations...
+//         existingOrder.setOrderDate(dto.getOrderDate());
+//         existingOrder.setQuantity(dto.getQuantity());
+//         if(dto.getCustomerId() != 0) {
+//             Customer customer = validateAndRetrieveCustomer(dto.getCustomerId());
+//             existingOrder.setCustomer(customer);
+//         }
 
-    private OrderDTO mapOrderToDTO(BookOrder bookOrder) {
-        OrderDTO orderDTO = orderMapper.toDTO(bookOrder);
+//         if(dto.getBookIDs() != null || !dto.getBookIDs().isEmpty()) {
+//             existingOrder.setBooks(validateAndRetrieveBooks(dto.getBookIDs()));
+//         }
 
-        if (bookOrder.getCustomer() != null) {
-            orderDTO.setCustomerId(bookOrder.getCustomer().getCustomerId());
-        }
-        orderDTO.setBookIDs(bookOrder.getBooks() == null
-                ? new ArrayList<>()
-                : bookOrder.getBooks()
-                .stream()
-                .map(Book::getBookId)
-                .collect(Collectors.toList()));
-        return orderDTO;
-    }
+//         BookOrder updatedOrder = bookOrderRepository.save(existingOrder);
 
-    private List<Book> validateAndRetrieveBooks(List<Integer> bookIDs) {
-        List<Book> books = bookRepository.findAllById(bookIDs);
+//         return mapOrderToDTO(updatedOrder);
+//     }
 
-        // Find missing book IDs
-        List<Integer> missingBookIds = bookIDs
-                .stream()
-                .filter(id -> books.stream().noneMatch(book -> book.getBookId() == id))
-                .toList();
 
-        if (!missingBookIds.isEmpty()) {
-            throw new EntityNotFoundException("Some books not found for IDs: " + missingBookIds);
-        }
-        return books;
-    }
+//     @Override
+//     public void delete(int id) {
 
-    private Customer validateAndRetrieveCustomer(int id){
-        if (id <= 0) {
-            throw new IllegalArgumentException("Invalid customer ID: " + id);
-        }
+//         if (!bookOrderRepository.existsById(id)) {
+//             throw new EntityNotFoundException("Order not found with id: " + id);
+//         }
+//         bookOrderRepository.deleteById(id);
+//     }
 
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
-    }
-}
+//     // Helper functions for above Crud Operations...
+
+//     private OrderDTO mapOrderToDTO(BookOrder bookOrder) {
+//         OrderDTO orderDTO = orderMapper.toDTO(bookOrder);
+
+//         if (bookOrder.getCustomer() != null) {
+//             orderDTO.setCustomerId(bookOrder.getCustomer().getCustomerId());
+//         }
+//         orderDTO.setBookIDs(bookOrder.getBooks() == null
+//                 ? new ArrayList<>()
+//                 : bookOrder.getBooks()
+//                 .stream()
+//                 .map(Book::getBookId)
+//                 .collect(Collectors.toList()));
+//         return orderDTO;
+//     }
+
+//     private List<Book> validateAndRetrieveBooks(List<Integer> bookIDs) {
+//         List<Book> books = bookRepository.findAllById(bookIDs);
+
+//         // Find missing book IDs
+//         List<Integer> missingBookIds = bookIDs
+//                 .stream()
+//                 .filter(id -> books.stream().noneMatch(book -> book.getBookId() == id))
+//                 .toList();
+
+//         if (!missingBookIds.isEmpty()) {
+//             throw new EntityNotFoundException("Some books not found for IDs: " + missingBookIds);
+//         }
+//         return books;
+//     }
+
+//     private Customer validateAndRetrieveCustomer(int id){
+//         if (id <= 0) {
+//             throw new IllegalArgumentException("Invalid customer ID: " + id);
+//         }
+
+//         return customerRepository.findById(id)
+//                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+//     }
+// }

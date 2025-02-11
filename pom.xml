@@ -27,7 +27,7 @@
     <url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -61,9 +61,9 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
+			<!-- <version>1.18.30</version> -->
 			<!-- <optional>true</optional> -->
-			<scope>provided</scope>
+			<!-- <scope>provided</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -131,7 +131,12 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.30</version>
+							<!-- <version>1.18.30</version> -->
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.6.2</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
