@@ -9,19 +9,15 @@ import com.example.online_book_store.model.Book;
 @Mapper(componentModel="spring")
 public interface BookMapper {
 
-    @Mapping(target = "authorId", ignore = true)
+    @Mapping(target = "authorId", expression="java(getId(book))")
     BookDTO toDTO(Book book);
 
     @Mapping(target = "author", ignore=true)
     Book toEntity(BookDTO bookDTO);
 
-    // @Named("authorFromAuthorId")
-    // default Author authorFromAuthorId(int id){
-    //     if(id == 0){
-    //         return null;
-    //     }
-    //     Author author = new Author();
-    //     author.setAuthorId(id);
-    //     return author;
-    // }
+    default Long getId(Book book){
+        return (book.getAuthor() != null)
+                    ? book.getAuthor().getId()
+                    : null;
+    }
 }

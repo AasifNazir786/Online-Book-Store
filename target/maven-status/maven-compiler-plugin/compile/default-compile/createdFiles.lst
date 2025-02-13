@@ -25,7 +25,6 @@ com/example/online_book_store/service/MyUserDetailsService.class
 com/example/online_book_store/mapper/BookMapper.class
 com/example/online_book_store/model/Review.class
 com/example/online_book_store/mapper/AuthorMapper.class
-com/example/online_book_store/service/JwtUtil.class
 com/example/online_book_store/model/User.class
 com/example/online_book_store/model/UserPrinciple.class
 com/example/online_book_store/model/Author.class

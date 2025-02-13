@@ -36,10 +36,10 @@
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/BookOrderService.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/BookService.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/CustomerService.java
-/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/JwtUtil.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/MyUserDetailsService.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service/UserService.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service_repository/AuthorRepo.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service_repository/BookRepo.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service_repository/CustomerRepo.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/service_repository/OrderRepo.java
+/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/utils/JwtUtil.java

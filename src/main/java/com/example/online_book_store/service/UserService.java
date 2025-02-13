@@ -1,6 +1,5 @@
 package com.example.online_book_store.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,8 +19,6 @@ import jakarta.transaction.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
     private final RegisterUserMapper registerUserMapper;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -80,6 +77,7 @@ public class UserService {
     }
 
     public void logoutUser() {
+
         jwtUtil.removeJwtToken();
     }
 }

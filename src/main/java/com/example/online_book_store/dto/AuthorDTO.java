@@ -1,22 +1,32 @@
 package com.example.online_book_store.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
 
 public class AuthorDTO {
 
-    private int authorId;
+    private Long id;
+
+    @NotBlank
     private String authorName;
+
     private String authorBiography;
+
     private String nationality;
+
     private String awards;
-    private List<BookDTO> books;
+
+    private List<BookDTO> books = new ArrayList<>();
 
     public AuthorDTO() {}
 
-    public AuthorDTO(int authorId, String authorName, String authorBiography,
-                                    String nationality, String awards,List<BookDTO> books) {
-
-        this.authorId = authorId;
+    public AuthorDTO(Long id, String authorName,
+                    String authorBiography,
+                    String nationality, String awards,
+                    List<BookDTO> books) {
+        this.id = id;
         this.authorName = authorName;
         this.authorBiography = authorBiography;
         this.nationality = nationality;
@@ -24,19 +34,19 @@ public class AuthorDTO {
         this.books = books;
     }
 
-    public int getAuthorId() {
-        return authorId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getAuthorName() {
+    public @NotBlank String getAuthorName() {
         return authorName;
     }
 
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(@NotBlank String authorName) {
         this.authorName = authorName;
     }
 
@@ -74,16 +84,13 @@ public class AuthorDTO {
 
     @Override
     public String toString() {
-
-        return "AuthorDTO [" +
-        
-        "authorId=" + authorId +
-        ", authorName=" + authorName +
-        ", authorBiography=" + authorBiography +
-        ", nationality=" + nationality +
-        ", awards=" + awards +
-        ", books=" + books +
-
-        "]";
+        return "AuthorDTO{" +
+                "id=" + id +
+                ", authorName='" + authorName + '\'' +
+                ", authorBiography='" + authorBiography + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", awards='" + awards + '\'' +
+                ", books=" + books +
+                '}';
     }
 }
