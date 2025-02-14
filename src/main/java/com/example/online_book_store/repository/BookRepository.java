@@ -14,8 +14,6 @@ public interface BookRepository extends JpaRepository<Book, Long>{
     @Query("SELECT b FROM Book b WHERE b.author.authorName = :authorName")
     Page<Book> findByAuthor_AuthorName(String authorName, Pageable pageable);
 
-    Page<Book> findAllByOrderByBookPriceAsc(Pageable pageable);
-
     Page<Book> findByBookPriceLessThan(double price, Pageable pageable);
 
     Page<Book> findByBookTitle(String bookTitle, Pageable pageable);

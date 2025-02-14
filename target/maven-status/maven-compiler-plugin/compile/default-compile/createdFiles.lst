@@ -1,5 +1,7 @@
+com/example/online_book_store/controller/AuthorController.class
 com/example/online_book_store/OnlineBookStoreApplication.class
 com/example/online_book_store/repository/AuthorRepository.class
+com/example/online_book_store/utils/JwtUtil.class
 com/example/online_book_store/service_repository/OrderRepo.class
 com/example/online_book_store/repository/UserRepository.class
 com/example/online_book_store/mapper/BookMapperImpl.class
@@ -13,6 +15,7 @@ com/example/online_book_store/dto/CustomerDTO.class
 com/example/online_book_store/dto/RegisterUser.class
 com/example/online_book_store/config/SecurityConfig.class
 com/example/online_book_store/model/Cart.class
+com/example/online_book_store/controller/BookController.class
 com/example/online_book_store/model/OrderItem.class
 com/example/online_book_store/service_repository/CustomerRepo.class
 com/example/online_book_store/mapper/AuthorMapperImpl.class
@@ -24,13 +27,16 @@ com/example/online_book_store/enums/Role.class
 com/example/online_book_store/service/MyUserDetailsService.class
 com/example/online_book_store/mapper/BookMapper.class
 com/example/online_book_store/model/Review.class
+com/example/online_book_store/service/AuthorService.class
 com/example/online_book_store/mapper/AuthorMapper.class
 com/example/online_book_store/model/User.class
 com/example/online_book_store/model/UserPrinciple.class
+com/example/online_book_store/config/CaffeineCacheConfig.class
 com/example/online_book_store/model/Author.class
 com/example/online_book_store/mapper/RegisterUserMapperImpl.class
 com/example/online_book_store/repository/BookRepository.class
 com/example/online_book_store/service_repository/BookRepo.class
+com/example/online_book_store/service/BookService.class
 com/example/online_book_store/enums/Status.class
 com/example/online_book_store/Generics/BaseRepository.class
 com/example/online_book_store/dto/LoginUser.class
