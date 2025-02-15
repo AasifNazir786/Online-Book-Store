@@ -58,7 +58,7 @@ public class BookController {
     return ResponseEntity.ok(bookDTOS);
     }
 
-    @GetMapping("/{authorName}")
+    @GetMapping("/name/{authorName}")
     public ResponseEntity<Page<BookDTO>> getAllByAuthorName(
         @PathVariable String authorName,
         @RequestParam(defaultValue = "0") int page,

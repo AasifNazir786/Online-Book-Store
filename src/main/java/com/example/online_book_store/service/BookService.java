@@ -81,7 +81,7 @@ public class BookService  {
     public Page<BookDTO> getAllByAuthorName(String authorName, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "bookTitle")
                 .and(Sort.by(Sort.Direction.ASC, "bookPrice")));
-        return bookRepository.findByAuthor_AuthorName(authorName, pageable).map(bookMapper::toDTO);
+        return bookRepository.findByAuthor_AuthorNameContainingIgnoreCase(authorName, pageable).map(bookMapper::toDTO);
     }
 
     @Cacheable(value = "books")

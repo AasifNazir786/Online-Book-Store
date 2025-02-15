@@ -1,65 +1,83 @@
 package com.example.online_book_store.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.online_book_store.enums.Status;
+
 public class OrderDTO {
-    private int orderId;
-    private LocalDate orderDate;
-    private int quantity;
-    private int customerId;
-    private List<Integer> bookIDs;
+    private Long id;
+    private LocalDateTime orderedDateTime;
+    private Long userId;
+    private Double totalPrice;
+    private Status status;
+    private List<OrderItemDTO> orderItems;
 
     public OrderDTO() {}
 
-    public OrderDTO(int orderId, LocalDate orderDate, int quantity, int customerId,
-            List<Integer> bookIDs) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.quantity = quantity;
-        this.customerId = customerId;
-        this.bookIDs = bookIDs;
+    public OrderDTO(Long id, LocalDateTime orderedDateTime, Long userId, Double totalPrice, Status status,
+            List<OrderItemDTO> orderItems) {
+        this.id = id;
+        this.orderedDateTime = orderedDateTime;
+        this.userId = userId;
+        this.totalPrice = totalPrice;
+        this.status = status;
+        this.orderItems = orderItems;
     }
 
-    public int getOrderId() { return orderId; }
-
-    public void setOrderId(int orderId) { this.orderId = orderId;}
-
-    public LocalDate getOrderDate() { return orderDate;}
-
-    public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate;}
-
-    public int getQuantity() { return quantity; }
-
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-
-    public int getCustomerId() {
-        return customerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public List<Integer> getBookIDs() {
-        return bookIDs;
+    public LocalDateTime getOrderedDateTime() {
+        return orderedDateTime;
     }
 
-    public void setBookIDs(List<Integer> bookIDs) {
-        this.bookIDs = bookIDs;
+    public void setOrderedDateTime(LocalDateTime orderedDateTime) {
+        this.orderedDateTime = orderedDateTime;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<OrderItemDTO> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItemDTO> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override
     public String toString() {
-        return "OrderDTO [" +
-
-                "orderId=" + orderId +
-                ", orderDate=" + orderDate +
-                ", quantity=" + quantity +
-                ", customerId=" + customerId +
-                ", bookIDs=" + bookIDs +
-                
-                "]";
+        return "OrderDTO [id=" + id + ", orderedDateTime=" + orderedDateTime + ", userId=" + userId + ", totalPrice="
+                + totalPrice + ", status=" + status + ", orderItems=" + orderItems + "]";
     }
+
     
 }
