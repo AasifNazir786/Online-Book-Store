@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.online_book_store.enums.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -73,11 +72,6 @@ public class User {
     @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Cart> cartList = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
@@ -89,7 +83,7 @@ public class User {
             @Size(min = 8, message = "Password should be at least 8 characters long") @Pattern(regexp = "^(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$", message = "Password should contain at least one special character and one digit") String password,
             @Email(message = "Invalid email format") String email, String address,
             @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits") String phoneNumber,
-            String resetToken, LocalDateTime resetTokenExpiry, List<Order> orders, List<Cart> cartList, Role role) {
+            String resetToken, LocalDateTime resetTokenExpiry, List<Order> orders, Role role) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
@@ -100,7 +94,6 @@ public class User {
         this.resetToken = resetToken;
         this.resetTokenExpiry = resetTokenExpiry;
         this.orders = orders;
-        this.cartList = cartList;
         this.role = role;
     }
 
@@ -182,14 +175,6 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
-    }
-
-    public List<Cart> getCartList() {
-        return cartList;
-    }
-
-    public void setCartList(List<Cart> cartList) {
-        this.cartList = cartList;
     }
 
     public Role getRole() {

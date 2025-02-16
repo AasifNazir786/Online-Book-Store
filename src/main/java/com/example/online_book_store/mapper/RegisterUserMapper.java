@@ -14,7 +14,6 @@ public interface RegisterUserMapper {
     @Mapping(target = "resetToken", ignore = true)
     @Mapping(target = "resetTokenExpiry", ignore = true)
     @Mapping(target = "orders", ignore = true)
-    @Mapping(target = "cartList", ignore = true)
     User toEntity(RegisterUser dto);
 
     RegisterUser toDTO(User user);

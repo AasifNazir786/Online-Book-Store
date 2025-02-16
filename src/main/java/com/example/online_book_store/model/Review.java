@@ -11,14 +11,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "reviews")
 public class Review {
     @Id
@@ -40,4 +34,66 @@ public class Review {
 
     @Size(max = 500)
     private String comment;
+
+    public Review() {
+    }
+
+    public Review(Long id, User user, Book book, Integer rating, String comment) {
+        this.id = id;
+        this.user = user;
+        this.book = book;
+        this.rating = rating;
+        this.comment = comment;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public @NotNull @Min(1) @Max(5) Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(@NotNull @Min(1) @Max(5) Integer rating) {
+        this.rating = rating;
+    }
+
+    public @Size(max = 500) String getComment() {
+        return comment;
+    }
+
+    public void setComment(@Size(max = 500) String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", user=" + user +
+                ", book=" + book +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

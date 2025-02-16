@@ -30,6 +30,7 @@ public class OrderService {
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
         calculateTotalPrice(order);
+        order.setStatus(Status.PENDING);
         order = orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
@@ -93,7 +94,23 @@ public class OrderService {
                 .toList();
     }
 
+    @CacheEvict(value = "orders", key = "#id")
+    public OrderDTO updateOrderStatus(Long id, Status status) {
+        Optional<Order> existingOrder = orderRepository.findById(id);
+        if (existingOrder.isPresent()) {
+            Order order = existingOrder.get();
+            order.setStatus(status);
+            order = orderRepository.save(order);
+            return orderMapper.toDTO(order);
+        }
+        return null;
+    }
 
+
+    /*
+    * private methods
+    * this method is used to calculate the total price of the ordered books
+    */
     private void calculateTotalPrice(Order order) {
         double totalPrice = order.getOrderItems()
                 .stream()

@@ -10,11 +10,14 @@
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/controller/UserController.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/AuthorDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/BookDTO.java
+/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/CartDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/CustomerDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/LoginUser.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/OrderDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/OrderItemDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/RegisterUser.java
+/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/ReviewDTO.java
+/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/dto/SimpleUserDTO.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/enums/Role.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/enums/Status.java
 /Users/aasif/myData/javaCode/myProjects/Online-Book-Store/src/main/java/com/example/online_book_store/filter/JwtFilter.java

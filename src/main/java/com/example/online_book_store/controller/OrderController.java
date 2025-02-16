@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,8 +68,8 @@ public class OrderController {
 
     @GetMapping("/date-range")
     public ResponseEntity<List<OrderDTO>> getOrdersBetweenDates(
-            @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate) {
+            @RequestParam @DateTimeFormat(pattern = "YYYY-MM-DD HH:mm") LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "YYYY-MM-DD HH:mm") LocalDateTime endDate) {
         List<OrderDTO> orders = orderService.getOrdersBetweenDates(startDate, endDate);
         return ResponseEntity.ok(orders);
     }
@@ -78,5 +79,11 @@ public class OrderController {
             @RequestParam Double minPrice) {
         List<OrderDTO> orders = orderService.getOrdersWithTotalPriceGreaterThan(minPrice);
         return ResponseEntity.ok(orders);
+    }
+
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestParam Status status) {
+        OrderDTO updatedOrder = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(updatedOrder);
     }
 }
