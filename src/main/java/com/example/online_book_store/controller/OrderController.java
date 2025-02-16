@@ -1,69 +1,82 @@
-// package com.example.online_book_store.controller;
+package com.example.online_book_store.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
 
-// import com.example.online_book_store.dto.OrderDTO;
-// import com.example.online_book_store.service.BookOrderService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-// import java.util.List;
+import com.example.online_book_store.dto.OrderDTO;
+import com.example.online_book_store.enums.Status;
+import com.example.online_book_store.service.OrderService;
 
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
 
-// @RestController
-// @RequestMapping("/api/orders")
-// public class OrderController {
+    @Autowired
+    private OrderService orderService;
 
-//     @Autowired
-//     private BookOrderService orderService;
+    @PostMapping
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    }
 
-//     @GetMapping
-//     public ResponseEntity<List<OrderDTO>> getAllOrders(){
-//         List<OrderDTO> orderList = orderService.getAll();
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        OrderDTO orderDTO = orderService.getOrderById(id);
+        return ResponseEntity.ok(orderDTO);
+    }
 
-//         if(orderList != null)
-//             return new ResponseEntity<>(orderList, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
 
-//         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//     }
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+        OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
-//     @GetMapping("/{id}")
-//     public ResponseEntity<OrderDTO> getById(@PathVariable int id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
 
-//         OrderDTO orderDTO = orderService.getById(id);
+    @GetMapping("/user/{userId}/status/{status}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserIdAndStatus(
+            @PathVariable Long userId,
+            @PathVariable Status status) {
+        List<OrderDTO> orders = orderService.getOrdersByUserIdAndStatus(userId, status);
+        return ResponseEntity.ok(orders);
+    }
 
-//         if(orderDTO != null)
-//             return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    @GetMapping("/date-range")
+    public ResponseEntity<List<OrderDTO>> getOrdersBetweenDates(
+            @RequestParam LocalDateTime startDate,
+            @RequestParam LocalDateTime endDate) {
+        List<OrderDTO> orders = orderService.getOrdersBetweenDates(startDate, endDate);
+        return ResponseEntity.ok(orders);
+    }
 
-//         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//     }
-
-//     @PostMapping
-//     public ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO orderDTO){
-
-//         OrderDTO orderDTO1 = orderService.create(orderDTO);
-
-//         if(orderDTO1 != null)
-//             return new ResponseEntity<>(orderDTO, HttpStatus.CREATED);
-
-//         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//     }
-
-//     @PutMapping("/update/{id}")
-//     public ResponseEntity<OrderDTO> updateOrder(@PathVariable int id, @RequestBody OrderDTO orderDTO){
-
-//         OrderDTO orderDTO1 = orderService.updateById(id, orderDTO);
-
-//         return new ResponseEntity<>(orderDTO1, HttpStatus.OK);
-//     }
-
-//     @DeleteMapping("{id}")
-//     public ResponseEntity<Void> deleteOrder(@PathVariable int id){
-
-//         orderService.delete(id);
-
-//         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//     }
-
-// }
+    @GetMapping("/total-price-greater-than")
+    public ResponseEntity<List<OrderDTO>> getOrdersWithTotalPriceGreaterThan(
+            @RequestParam Double minPrice) {
+        List<OrderDTO> orders = orderService.getOrdersWithTotalPriceGreaterThan(minPrice);
+        return ResponseEntity.ok(orders);
+    }
+}

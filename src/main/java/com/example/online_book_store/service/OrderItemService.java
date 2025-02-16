@@ -1,7 +1,6 @@
 package com.example.online_book_store.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,6 +11,8 @@ import com.example.online_book_store.dto.OrderItemDTO;
 import com.example.online_book_store.mapper.OrderItemMapper;
 import com.example.online_book_store.model.OrderItem;
 import com.example.online_book_store.repository.OrderItemRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class OrderItemService {
@@ -31,8 +32,9 @@ public class OrderItemService {
 
     @Cacheable(value = "orderItems", key = "#id")
     public OrderItemDTO getOrderItemById(Long id) {
-        Optional<OrderItem> orderItem = orderItemRepository.findById(id);
-        return orderItem.map(orderItemMapper::toDTO).orElse(null);
+        OrderItem orderItem = orderItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OrderItem not found with id: " + id));
+        return orderItemMapper.toDTO(orderItem);
     }
 
     @Cacheable(value = "orderItems")
@@ -45,8 +47,9 @@ public class OrderItemService {
 
     @CacheEvict(value = "orderItems", key = "#id")
     public OrderItemDTO updateOrderItem(Long id, OrderItemDTO orderItemDTO) {
-        Optional<OrderItem> existingOrderItem = orderItemRepository.findById(id);
-        if (existingOrderItem.isPresent()) {
+        OrderItem existingOrderItem = orderItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("OrderItem not found with id: " + id));
+        if (existingOrderItem != null) {
             OrderItem orderItem = orderItemMapper.toEntity(orderItemDTO);
             orderItem.setId(id);
             orderItem = orderItemRepository.save(orderItem);
@@ -57,6 +60,8 @@ public class OrderItemService {
 
     @CacheEvict(value = "orderItems", key = "#id")
     public void deleteOrderItem(Long id) {
+        if(!orderItemRepository.existsById(id))
+            throw new EntityNotFoundException("orderItem not exists");
         orderItemRepository.deleteById(id);
     }
 

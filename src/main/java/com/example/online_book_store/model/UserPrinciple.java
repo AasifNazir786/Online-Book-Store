@@ -30,23 +30,23 @@ public class UserPrinciple implements UserDetails {
         return user.getUsername();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; // Change logic if account expiry needs to be handled
-    }
+    // @Override
+    // public boolean isAccountNonExpired() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; // Implement logic if account locking is required
-    }
+    // @Override
+    // public boolean isAccountNonLocked() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // Modify if password expiration needs to be handled
-    }
+    // @Override
+    // public boolean isCredentialsNonExpired() {
+    //     return true;
+    // }
 
-    @Override
-    public boolean isEnabled() {
-        return true; // Change if user activation logic is required
-    }
+    // @Override
+    // public boolean isEnabled() {
+    //     return true;
+    // }
 }

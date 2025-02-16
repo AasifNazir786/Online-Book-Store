@@ -15,6 +15,8 @@ import com.example.online_book_store.mapper.OrderMapper;
 import com.example.online_book_store.model.Order;
 import com.example.online_book_store.repository.OrderRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class OrderService {
 
@@ -27,14 +29,16 @@ public class OrderService {
     @CacheEvict(value = "orders", allEntries = true)
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
+        calculateTotalPrice(order);
         order = orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
 
     @Cacheable(value = "orders", key = "#id")
     public OrderDTO getOrderById(Long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        return order.map(orderMapper::toDTO).orElse(null);
+        Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Order Not found with id: " + id));
+        return orderMapper.toDTO(order);
     }
 
     @Cacheable(value = "orders")
@@ -51,6 +55,7 @@ public class OrderService {
         if (existingOrder.isPresent()) {
             Order order = orderMapper.toEntity(orderDTO);
             order.setId(id);
+            calculateTotalPrice(order);
             order = orderRepository.save(order);
             return orderMapper.toDTO(order);
         }
@@ -59,6 +64,8 @@ public class OrderService {
 
     @CacheEvict(value = "orders", key = "#id")
     public void deleteOrder(Long id) {
+        if(!orderRepository.existsById(id))
+            throw new EntityNotFoundException("order not exists");
         orderRepository.deleteById(id);
     }
 
@@ -84,5 +91,14 @@ public class OrderService {
                 .stream()
                 .map(orderMapper::toDTO)
                 .toList();
+    }
+
+
+    private void calculateTotalPrice(Order order) {
+        double totalPrice = order.getOrderItems()
+                .stream()
+                .mapToDouble(orderItem -> orderItem.getBook().getBookPrice() * orderItem.getQuantity())
+                .sum();
+        order.setTotalPrice(totalPrice);
     }
 }
