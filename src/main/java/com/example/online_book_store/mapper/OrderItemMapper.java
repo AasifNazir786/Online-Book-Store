@@ -27,22 +27,10 @@ public abstract class OrderItemMapper {
     @Mapping(target="book", source="bookId", qualifiedByName="mapBook")
     public abstract OrderItem toEntity(OrderItemDTO dto);
 
-    @Mapping(target="orderId", expression="java(getOrderIdFromOrder(orderItem))")
-    @Mapping(target="bookId", expression="java(getBookIdFromBook(orderItem))")
+    @Mapping(target="orderId", source = "order.id")
+    @Mapping(target="bookId", source="book.id")
     public abstract OrderItemDTO toDTO(OrderItem orderItem);
-
-    protected Long getOrderIdFromOrder(OrderItem orderItem){
-        return (orderItem.getOrder() != null)
-                ? orderItem.getOrder().getId()
-                : null;
-    }
-
-    protected Long getBookIdFromBook(OrderItem orderItem){
-        return (orderItem.getBook() != null)
-                ? orderItem.getBook().getId()
-                : null;
-    }
-
+    
     @Named("mapOrder")
     protected Order mapOrder(Long orderId){
         return orderRepository.findById(orderId)

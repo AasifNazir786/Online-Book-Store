@@ -16,8 +16,8 @@ public class ReviewDTO {
     @Size(max = 500)
     private String comment;
 
-    private SimpleUserDTO user; // Embed UserDTO for frontend display
-    private BookDTO book; // Embed BookDTO for frontend display
+    private SimpleUserDTO user;
+    private BookDTO book;
 
     public ReviewDTO() {}
 

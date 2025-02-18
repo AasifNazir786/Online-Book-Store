@@ -2,23 +2,31 @@ package com.example.online_book_store.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.online_book_store.dto.OrderDTO;
 import com.example.online_book_store.model.Order;
+import com.example.online_book_store.model.User;
+import com.example.online_book_store.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Mapper(componentModel="spring", uses={OrderItemMapper.class})
-public interface OrderMapper {
+public abstract class OrderMapper {
 
-    @Mapping(target="userId", expression="java(extractIdFromUser(order))")
-    @Mapping(source="orderItems", target="orderItems")
-    OrderDTO toDTO(Order order);
+    @Autowired
+    private UserRepository userRepository;
 
-    @Mapping(target="user", ignore=true)
-    Order toEntity(OrderDTO orderDTO);
+    @Mapping(target="userId", source = "user.id")
+    public abstract OrderDTO toDTO(Order order);
 
-    default Long extractIdFromUser(Order order){
-        return (order.getUser() != null)
-            ? order.getUser().getId()
-            : null;
+    @Mapping(target="user", source = "userId", qualifiedByName = "mapUser")
+    public abstract Order toEntity(OrderDTO orderDTO);
+
+    @Named("mapUser")
+    public User mapUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
     }
 }

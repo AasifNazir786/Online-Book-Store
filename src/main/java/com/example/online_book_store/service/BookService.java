@@ -58,8 +58,7 @@ public class BookService  {
         List<Book> savedBooks = bookRepository.saveAll(books);
 
         return savedBooks.stream().map(book -> {
-            BookDTO dto = bookMapper.toDTO(book);
-            return dto;
+            return bookMapper.toDTO(book);
         }).toList();
     }
 
