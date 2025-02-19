@@ -46,11 +46,12 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "reviews", key = "#bookTitle + #pageable.pageNumber")
-    public Page<Review> getReviewsByBookTitle(String bookTitle, int page, int size) {
+    @Cacheable(value = "reviews")
+    public Page<ReviewDTO> getReviewsByBookTitle(String bookTitle, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, bookTitle));
-        return reviewRepository.findByBook_BookTitle(bookTitle, pageable);
+        Page<Review> reviews = reviewRepository.findByBook_BookTitle(bookTitle, pageable);
+        return reviews.map(this::mapToDTO);
     }
 
     @Transactional(readOnly = true)

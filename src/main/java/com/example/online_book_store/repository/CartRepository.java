@@ -34,4 +34,6 @@ public interface CartRepository extends JpaRepository<Cart, Long>{
     @Modifying
     @Query("UPDATE Cart c SET c.quantity = :quantity WHERE c.user.username = :userName AND c.book.bookTitle = :bookTitle")
     void updateQuantityInCart(String userName, String bookTitle, int quantity);
+
+    boolean existsByUser_Username(String userName);
 }
