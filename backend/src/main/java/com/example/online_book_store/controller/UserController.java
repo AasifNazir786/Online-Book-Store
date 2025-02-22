@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.online_book_store.dto.LoginUser;
 import com.example.online_book_store.dto.RegisterUser;
+import com.example.online_book_store.dto.UserWithToken;
 import com.example.online_book_store.service.UserService;
 
 @RestController
@@ -21,14 +22,21 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterUser dto){
-        String token = userService.registerUser(dto);
+        UserWithToken token = userService.registerUser(dto);
+        if(token.getToken() == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
+        }
         return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginUser user){
-        String token = userService.verifyUser(user);
-        return ResponseEntity.ok().body(token);
+    public ResponseEntity<?> loginUser(@RequestBody LoginUser user){
+        System.out.println("login method is called");
+        UserWithToken userWithToken = userService.verifyUser(user);
+        if(userWithToken.getToken() == null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(userWithToken, HttpStatus.OK);
     }
 
     @PostMapping("/logout")

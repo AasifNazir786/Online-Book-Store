@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,42 +30,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception{
-        // return http
-        //         .csrf(AbstractHttpConfigurer::disable)
-        //         .authorizeHttpRequests(authorize -> authorize
-        //         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
-        //         .requestMatchers("/admin/**").hasRole("ADMIN")
-        //         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-        //         .anyRequest()
-        //         .authenticated())
-        //         .formLogin(form -> form
-        //         .loginPage("/login")
-        //         .loginProcessingUrl("/api/auth/login")
-        //         .defaultSuccessUrl("/", true)
-        //         .failureUrl("/login?error=true")
-        //         .permitAll())
-        //         .logout(logout -> logout
-        //         .logoutUrl("/api/auth/logout")
-        //         .logoutSuccessUrl("/login") // Redirect after logout
-        //         .permitAll())
-        //         .sessionManagement(session -> session
-        //         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        //         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        //         .build();
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/api/auth/login", "/api/auth/register")
-                        .permitAll()
-                    .anyRequest()
-                        .authenticated()
-                )
+                .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
+//                .requestMatchers("/admin/**").hasRole("ADMIN")
+//                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest()
+                .authenticated())
                 .httpBasic(Customizer.withDefaults())
+                .formLogin(form -> form
+                .loginPage("http://localhost:5173/login")
+                .loginProcessingUrl("http://localhost:8080/api/auth/login")
+                .defaultSuccessUrl("http://localhost:5173", true)
+                .failureUrl("http://localhost:5173/login?error=true")
+                .permitAll())
+                .logout(logout -> logout
+                .logoutUrl("http://localhost:8080/api/auth/logout")
+                .logoutSuccessUrl("http://localhost:5173/login")
+                .permitAll())
                 .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+//         return http
+//                 .csrf(csrf -> csrf.disable())
+//                 .authorizeHttpRequests(authorize -> authorize
+//                     .requestMatchers("/api/auth/login", "/api/auth/register")
+//                         .permitAll()
+//                     .anyRequest()
+//                         .authenticated()
+//                 )
+//                 .httpBasic(Customizer.withDefaults())
+//                 .sessionManagement(session -> session
+//                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                 )
+//                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//                 .build();
                 
     }
 

@@ -3,7 +3,6 @@ package com.example.online_book_store.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,6 +22,7 @@ import com.example.online_book_store.repository.AuthorRepository;
 import com.example.online_book_store.repository.BookRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService {
@@ -31,13 +31,13 @@ public class AuthorService {
     private AuthorRepository authorRepository;
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Autowired
-    AuthorMapper authorMapper;
+    private AuthorMapper authorMapper;
 
     @Autowired
-    BookMapper bookMapper;
+    private BookMapper bookMapper;
 
     @Transactional
     @CacheEvict(cacheNames = "authors", allEntries = true)

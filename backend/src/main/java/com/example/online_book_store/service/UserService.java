@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.online_book_store.dto.LoginUser;
 import com.example.online_book_store.dto.RegisterUser;
+import com.example.online_book_store.dto.UserDetailDTO;
+import com.example.online_book_store.dto.UserWithToken;
 import com.example.online_book_store.mapper.RegisterUserMapper;
 import com.example.online_book_store.model.User;
 import com.example.online_book_store.repository.UserRepository;
@@ -36,7 +38,7 @@ public class UserService {
     }
 
     @Transactional
-    public String registerUser(RegisterUser registerUserDto) {
+    public UserWithToken registerUser(RegisterUser registerUserDto) {
         if (userRepository.existsByUsername(registerUserDto.getUsername())) {
             throw new IllegalArgumentException("Username is already taken.");
         }
@@ -58,18 +60,21 @@ public class UserService {
         validateContactInfo(user.getEmail(), user.getPhoneNumber());
         
         User savedUser = userRepository.save(user);
-        return jwtUtil.generateJwtToken(savedUser.getUsername(), savedUser.getRole());
+        String token = jwtUtil.generateJwtToken(savedUser.getUsername(), savedUser.getRole());
+
+        return mapUserToUserWithToken(savedUser, token);
     }
 
-    public String verifyUser(LoginUser user){
+    public UserWithToken verifyUser(LoginUser user){
         User user1 = userRepository.findByUsername(user.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         if(authentication.isAuthenticated()){
-            return jwtUtil.generateJwtToken(user.getUsername(), user1.getRole());
+            String token = jwtUtil.generateJwtToken(user.getUsername(), user1.getRole());
+            return mapUserToUserWithToken(user1, token);
         }
-        return "Failed";
+        return new UserWithToken();
     }
 
     private void validateContactInfo(String email, String phoneNumber) {
@@ -81,5 +86,17 @@ public class UserService {
     public void logoutUser() {
 
         jwtUtil.removeJwtToken();
+    }
+
+    private UserWithToken mapUserToUserWithToken(User user, String token) {
+        UserDetailDTO userDetailDTO = new UserDetailDTO();
+        userDetailDTO.setId(user.getId());
+        userDetailDTO.setFullName(user.getFullName());
+        userDetailDTO.setUsername(user.getUsername());
+        userDetailDTO.setEmail(user.getEmail());
+        userDetailDTO.setAddress(null);
+        userDetailDTO.setPhoneNumber(user.getPhoneNumber());
+        userDetailDTO.setRole(user.getRole());
+        return new UserWithToken(token, userDetailDTO);
     }
 }
