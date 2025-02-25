@@ -1,27 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #56a8a5, #5649a8);
+.main-container {
+    background: linear-gradient(135deg, #504875, #354b65);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     padding: 20px;
+    gap: 20px;
+    background-image: url('/Users/aasif/myData/javaCode/myProjects/Online-Book-Store/frontend/src/assets/login-bg-image.jpg');
+    background-repeat: no-repeat;
+    background-size: 1160px 630px;
+}
+
+.bookstore-info {
+    max-width: 300px;
+    color: rgb(8, 233, 211);
+    text-align: center;
+}
+
+.bookstore-info h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.bookstore-info p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.info-image {
+    width: 100%;
+    max-width: 250px;
+    margin-top: 15px;
 }
 
 .login-container {
     width: 100%;
-    max-width: 380px;
+    max-width: 400px;
     padding: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.227);
+    backdrop-filter: blur(1px);
     border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
@@ -80,44 +101,47 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: #fff;
-    background: #b041be;
+    background: #94409f;
     border: none;
-    border-radius: 6px;
+    border-radius: 15px;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .login-button:hover {
     background: #eb08c5;
+    scale: .95;
 }
 
-/* Footer Links */
 .form-footer {
     margin-top: 15px;
     font-size: 14px;
 }
 
 .signup-link, .forgot-password {
-    color: #020202bd;
-    /* text-decoration: none; */
+    color: #030303;
     font-weight: 500;
     transition: color 0.3s ease-in-out;
+    text-decoration: none;
 }
 
 .signup-link:hover, .forgot-password:hover {
-    color: #aa34aa;
+    color: #ff6bff;
     text-decoration: underline;
 }
 
 /* Responsive Design */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .bookstore-info {
+        max-width: 100%;
+    }
+
     .login-container {
-        padding: 20px;
-    }
-    .login-title {
-        font-size: 22px;
-    }
-    .form-input, .login-button {
-        padding: 10px;
+        width: 90%;
     }
 }

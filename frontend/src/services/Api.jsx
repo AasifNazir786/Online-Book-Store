@@ -1,17 +1,15 @@
 import axios from "axios";
 
 const BASE_URL = 'http://localhost:8080/api';
-const token = localStorage.getItem('token') || '';
+// const token = localStorage.getItem('token') || '';
 
 const api = axios.create({
     baseURL: BASE_URL,
 });
 
 export const loginUser = async (credentials) => {
-    console.log('Credentials Data '+credentials.username, credentials.password)
     try {
         const response = await api.post('/auth/login', credentials);
-        console.log('Login response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Login error:', error.response?.data || error.message);
@@ -19,10 +17,18 @@ export const loginUser = async (credentials) => {
     }
 };
 
+export const logoutUser = async () => {
+    try {
+        const response = await api.post("/auth/logout");
+        return response.data;
+    } catch (error) {
+        console.error('logout error:', error.response?.data || error.message)
+    }
+}
+
 export const signupUser = async (userData) => {
     try {
         const response = await api.post('/auth/register', userData);
-        console.log('Signup response:', response.data); // Debugging
         return response.data;
     } catch (error) {
         console.error('Signup error:', error.response?.data || error.message);
@@ -31,12 +37,8 @@ export const signupUser = async (userData) => {
 };
 
 
-export const getBooks = async () => {
-    const response = await api.get('/books', {
-        headers: {
-            Authorization: token ? `Bearer ${token}` : ''
-        }
-    })
-
+export const getBooks = async (page, size) => {
+    const response = await api.get(`/books/all?page=${page}&size=${size}`);
+    console.log(response.data)
     return response.data
-}
+};

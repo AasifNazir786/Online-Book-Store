@@ -1,0 +1,249 @@
+/* Importing a modern font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+/* General Navbar Styling */
+.navbar {
+    padding: 8px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    font-family: "Poppins", sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar.dark-mode {
+    background-color: #1a1a1a;
+    color: #f1f1f1;
+}
+
+.navbar.light-mode {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Logo Styling */
+.navbar-logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    /* display: flex; */
+    align-items: center;
+    gap: 10px;
+}
+
+/* Navbar Links */
+.navbar-links {
+    /* margin-left: 10px; */
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.navbar-links a,
+.navbar-links button {
+    /* color: rgb(4, 4, 4); */
+    color: inherit;
+    text-decoration: none;
+    font-size: .8rem;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.navbar-links a:hover,
+.navbar-links button:hover {
+    color: #38887d;
+    transform: translateY(-2px);
+}
+
+/* Dropdown Menu */
+/* .dropdown {
+    position: relative;
+} */
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    color: black;
+    min-width: 180px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 100;
+    padding: 10px 0;
+}
+
+.dropdown-content a,
+.dropdown-content button {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    text-align: left;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+/* .signup-btn{
+    display: flex;
+} */
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Icons Styling */
+.icon-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.3s ease;
+}
+
+.icon-link:hover {
+    transform: translateY(-2px);
+}
+
+.icon {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.icon:hover {
+    color: #1abc9c;
+    transform: scale(1.1);
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #e74c3c;
+    color: white;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    color: #1abc9c;
+}
+
+/* Logout Button */
+.logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: red;
+    padding: 10px 15px;
+    text-align: left;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #f1f1f1;
+}
+
+/* Mobile Navigation */
+.mobile-menu-button {
+    display: none;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+    color: #1abc9c;
+}
+
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #34495e;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+    color: inherit;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+    color: #1abc9c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: block;
+    }
+
+    .mobile-menu {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px;
+    }
+
+    .navbar-logo {
+        font-size: 1.4rem;
+    }
+
+    .navbar-search input {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}

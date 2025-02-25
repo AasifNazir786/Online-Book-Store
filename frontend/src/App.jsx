@@ -1,26 +1,53 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import './App.css';
-import Login from './components/Auth/Login';
-import Signup from './components/Auth/Signup';
+import PropTypes from 'prop-types';
+import { useContext, useState } from 'react';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './components/UserAuth/Login.jsx';
+import Signup from './components/UserAuth/Signup.jsx';
+import AuthContext from './context/AuthContext.jsx';
 
 function App() {
-  
+  const [cartCount] = useState(0);
+  const [wishlistCount] = useState(0);
+  const { user } = useContext(AuthContext);
 
-    return (
-      <Router>
-        <Routes>
-
-        <Route path="/" element={<h1>Welcome to My App</h1>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          {/* <Route element={<ProtectedRoute />}> */}
-            {/* <Route path="/" element={<Dashboard />}> */}
-              {/* Add nested routes for dashboard components */}
-            {/* </Route> */}
-          {/* </Route> */}
-        </Routes>
-      </Router>
-    );
+  return (
+    <Router>
+      <MainLayout user={user} cartCount={cartCount} wishlistCount={wishlistCount} />
+    </Router>
+  );
 }
 
-export default App
+function MainLayout({ user, cartCount, wishlistCount }) {
+  const location = useLocation();
+  const hideNavbarRoutes = ['/login', '/signup'];
+
+  return (
+    <>
+      {/* Hide Navbar on Login & Signup pages */}
+      {!hideNavbarRoutes.includes(location.pathname) && (
+        <Dashboard user={user} cartCount={cartCount} wishlistCount={wishlistCount} />
+      )}
+
+      <Routes>
+        {/* <Route path="/" element={<Dashboard user={user} cartCount={cartCount} wishlistCount={wishlistCount} />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          {/* <Route path="/dashboard" element={<Dashboard user={user} cartCount={cartCount} wishlistCount={wishlistCount} />} /> */}
+        </Route>
+      </Routes>
+    </>
+  );
+}
+
+MainLayout.propTypes = {
+  user: PropTypes.object,
+  cartCount: PropTypes.number.isRequired,
+  wishlistCount: PropTypes.number.isRequired,
+};
+
+export default App;
