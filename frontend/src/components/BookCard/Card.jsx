@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import "./bookCard.css";
 
 const BookCard = ({ book, onBuyNow, onAddToCart }) => {
+    console.log('the book is: ' + (book.author ? book.author : 'Unknown Author'));
     return (
         <div className="book-card">
             <img src={book.image} alt={book.title} className="book-image" />
@@ -22,9 +23,11 @@ const BookCard = ({ book, onBuyNow, onAddToCart }) => {
         </div>
     );
 };
+
 BookCard.propTypes = {
     book: PropTypes.object.isRequired,
     onBuyNow: PropTypes.func.isRequired,
     onAddToCart: PropTypes.func.isRequired
 };
+
 export default BookCard;

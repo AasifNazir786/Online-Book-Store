@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.online_book_store.dto.BookDTO;
+import com.example.online_book_store.dto.BookWithAuthorDTO;
 import com.example.online_book_store.service.BookService;
 
 @RestController
@@ -68,12 +69,18 @@ public class BookController {
         return ResponseEntity.ok(bookDTOS);
     }
 
+    @PutMapping("/updateList")
+    public ResponseEntity<List<BookDTO>> updateListBooks(@RequestBody List<BookDTO> listBooks){
+        List<BookDTO> books = bookService.updateList(listBooks);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
     @GetMapping("/all")
-    public ResponseEntity<Page<BookDTO>> getAllBooks(
+    public ResponseEntity<Page<BookWithAuthorDTO>> getAllBooks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        Page<BookDTO> bookDTOS = bookService.getAll(page, size);
+        Page<BookWithAuthorDTO> bookDTOS = bookService.getAll(page, size);
         return ResponseEntity.ok(bookDTOS);
     }
 

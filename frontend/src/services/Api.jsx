@@ -39,6 +39,5 @@ export const signupUser = async (userData) => {
 
 export const getBooks = async (page, size) => {
     const response = await api.get(`/books/all?page=${page}&size=${size}`);
-    console.log(response.data)
     return response.data
 };

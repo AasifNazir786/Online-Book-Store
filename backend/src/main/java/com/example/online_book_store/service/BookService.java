@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.online_book_store.dto.BookDTO;
+import com.example.online_book_store.dto.BookWithAuthorDTO;
 import com.example.online_book_store.mapper.BookMapper;
 import com.example.online_book_store.model.Author;
 import com.example.online_book_store.model.Book;
@@ -28,10 +29,10 @@ public class BookService  {
     private BookRepository bookRepository;
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private BookMapper bookMapper;
 
     @Autowired
-    private BookMapper bookMapper;
+    private AuthorRepository authorRepository;
 
     @Transactional
     @CacheEvict(value = "books", allEntries = true)
@@ -84,10 +85,11 @@ public class BookService  {
     }
 
     @Cacheable(value = "books")
-    public Page<BookDTO> getAll(int page, int size) {
+    public Page<BookWithAuthorDTO> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "bookTitle")
                 .and(Sort.by(Sort.Direction.ASC, "bookPrice")));
-        return bookRepository.findAll(pageable).map(bookMapper::toDTO);
+        Page<Book> books = bookRepository.findAll(pageable);
+        return books.map(this::mapBookToBookWithAuthorDTO);
     }
 
     @Cacheable(value = "books", key = "#id")
@@ -106,11 +108,8 @@ public class BookService  {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book Not found with id: " + id));
 
-        Author author = (dto.getAuthorId() != null)
-                ? authorRepository.findById(dto.getAuthorId())
-                .orElseThrow(() -> new EntityNotFoundException("Author Not found with id: " + dto.getAuthorId()))
-                : null;
-
+        Author author = authorRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException("Author Not found with id: " + dto.getAuthorId()));
         book.setAuthor(author);
         book.setBookPrice(dto.getBookPrice());
         book.setBookStock(dto.getBookStock());
@@ -122,6 +121,22 @@ public class BookService  {
         return bookMapper.toDTO(bookRepository.save(book));
     }
 
+    @CacheEvict(value = "books", allEntries = true)
+    @Transactional
+    public List<BookDTO> updateList(List<BookDTO> dtos) {
+        List<Book> books = dtos.stream().map(dto -> {
+            Book book = bookRepository.findById(dto.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Book Not found with id: " + dto.getId()));
+            book.setBookPrice(dto.getBookPrice());
+            book.setBookStock(dto.getBookStock());
+            book.setBookTitle(dto.getBookTitle());
+            book.setGenre(dto.getGenre());
+            book.setImageUrl(dto.getImageUrl());
+            book.setPublicationDate(dto.getPublicationDate());
+            return book;
+        }).toList();
+        return bookRepository.saveAll(books).stream().map(bookMapper::toDTO).toList();
+    }
 
     @CacheEvict(value = "books", allEntries = true)
     @Transactional
@@ -136,15 +151,25 @@ public class BookService  {
     private Book mapDtoToBook(BookDTO bookDTO){
         Book book = bookMapper.toEntity(bookDTO);
         try {
-            Author author = authorRepository.findById(bookDTO.getAuthorId())
-                    .orElseThrow(() ->
-                            new EntityNotFoundException("Author Not Found with id: "+bookDTO.getAuthorId())
-                    );
-            book.setAuthor(author);
+
 
         } catch (Exception e) {
             throw new EntityNotFoundException(e);
         }
         return book;
     }
+
+    private BookWithAuthorDTO mapBookToBookWithAuthorDTO(Book book){
+        BookWithAuthorDTO bookWithAuthorDTO = new BookWithAuthorDTO();
+        bookWithAuthorDTO.setId(book.getId());
+        bookWithAuthorDTO.setBookTitle(book.getBookTitle());
+        bookWithAuthorDTO.setBookPrice(book.getBookPrice());
+        bookWithAuthorDTO.setBookStock(book.getBookStock());
+        bookWithAuthorDTO.setGenre(book.getGenre());
+        bookWithAuthorDTO.setImageUrl(book.getImageUrl());
+        bookWithAuthorDTO.setAuthorName(book.getAuthor().getAuthorName());
+        return bookWithAuthorDTO;
+    }
+
+
 }

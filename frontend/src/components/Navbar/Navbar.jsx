@@ -66,18 +66,18 @@ const Navbar = ({ user, cartCount, wishlistCount }) => {
 
                     {/* Wishlist & Cart */}
                     <a href="/wishlist" className="icon-link">
-                        <FaHeart size={24} className="icon" />
+                        <FaHeart size={20} className="icon" />
                         {wishlistCount > 0 && <span className="badge">{wishlistCount}</span>}
                     </a>
 
                     <a href="/cart" className="icon-link">
-                        <FaShoppingCart size={24} className="icon" />
+                        <FaShoppingCart size={20} className="icon" />
                         {cartCount > 0 && <span className="badge">{cartCount}</span>}
                     </a>
 
                     {/* Dark Mode Toggle */}
                     <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-                        {darkMode ? <FaSun size={24} className="icon" /> : <FaMoon size={24} className="icon" />}
+                        {darkMode ? <FaSun size={20} className="icon" /> : <FaMoon size={20} className="icon" />}
                     </button>
 
                     {/* My Account Dropdown */}

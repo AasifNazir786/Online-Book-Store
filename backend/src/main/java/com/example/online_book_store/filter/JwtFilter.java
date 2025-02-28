@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
 //            filterChain.doFilter(request, response);
 //            return;
 //        }
-        if(request.getRequestURI().equals("/api/auth/login") || request.getRequestURI().equals("/api/auth/register")){
+        if(request.getRequestURI().equals("/api/auth/login") || request.getRequestURI().equals("/api/auth/register") || request.getRequestURI().equals("api/books/**")){
             filterChain.doFilter(request, response);
             return;
         }
@@ -56,14 +56,14 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.extractUserName(jwt);
             } catch (ExpiredJwtException e) {
-                logger.error("JWT token is expired: {}", e.getMessage());
+                LOGGER.error("JWT token is expired: {}", e.getMessage());
             } catch (MalformedJwtException e) {
-                logger.error("Invalid JWT token: {}", e.getMessage());
+                LOGGER.error("Invalid JWT token: {}", e.getMessage());
             } catch (Exception e) {
-                logger.error("Error extracting username from JWT token: {}", e.getMessage());
+                LOGGER.error("Error extracting username from JWT token: {}", e.getMessage());
             }
         } else {
-            logger.warn("JWT token does not start with Bearer or is missing");
+            LOGGER.warn("JWT token does not start with Bearer or is missing");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -75,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                logger.info("Authenticated user: {}", username);
+                LOGGER.info("Authenticated user: {}", username);
             }
         }
 

@@ -79,7 +79,7 @@
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: white;
+    background-color: rgb(165, 138, 138);
     color: black;
     min-width: 180px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -109,7 +109,7 @@
 
 .dropdown-content a:hover,
 .dropdown-content button:hover {
-    background-color: #f1f1f1;
+    background-color: #bcb1b1;
 }
 
 .dropdown:hover .dropdown-content {

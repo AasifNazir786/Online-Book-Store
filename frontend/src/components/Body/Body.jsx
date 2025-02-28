@@ -15,19 +15,16 @@ const Body = () => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                console.log('enter getBooks ....')
                 const data = await getBooks(page, size);
-                console.log("Fetched books:", data);
                 if (data && Array.isArray(data.content)) {
                     setBooks(data.content);
-                    setTotalPages(data.totalPages); // Set total pages from API response
+                    setTotalPages(data.totalPages);
                 } else {
                     setBooks([]);
                     setTotalPages(0);
                 }
             } catch (error) {
-                console.error("Error fetching books:", error);
-                setError("Failed to fetch books. Please try again later.");
+                setError("Failed to fetch books. Please try again later. "+ error);
             } finally {
                 setLoading(false);
             }
@@ -123,7 +120,7 @@ const Body = () => {
                                         book={{
                                             image: book.imageUrl,
                                             title: book.bookTitle,
-                                            author: book.author ? book.author.authorName : "Unknown Author",
+                                            author: book.authorName,
                                             price: book.bookPrice,
                                             genre: book.genre,
                                         }}
@@ -145,7 +142,7 @@ const Body = () => {
                                         book={{
                                             image: book.imageUrl,
                                             title: book.bookTitle,
-                                            author: book.author ? book.author.authorName : "Unknown Author",
+                                            author: book.authorName,
                                             price: book.bookPrice,
                                             genre: book.genre,
                                         }}
@@ -165,7 +162,7 @@ const Body = () => {
                                     book={{
                                         image: book.imageUrl,
                                         title: book.bookTitle,
-                                        author: book.author ? book.author.authorName : "Unknown Author",
+                                        author: book.authorName,
                                         price: book.bookPrice,
                                         genre: book.genre,
                                     }}

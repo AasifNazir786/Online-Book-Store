@@ -1,15 +1,16 @@
 .book-card {
     background: #fff;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.374);
     overflow: hidden;
     transition: transform 0.2s ease-in-out;
-    width: 250px;
+    width: 230px;
     max-width: 360px;
-    height: 420px;
-    max-height: 450px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
     text-align: center;
-    padding: 5px;
+    padding: 10px;
 }
 
 .book-card:hover {
@@ -18,43 +19,48 @@
 
 .book-image {
     width: 100%;
-    max-height: 240px;
-    height: auto;
-    border-radius: 12px;
-    object-fit: cover;
+    height: 260px;
+    object-fit: contain;
+    border-radius: 20px;
+    display: block;
 }
 
 .book-details {
-    padding: 4px;
-    max-width: 100%;
-    max-height: 150px;
+    padding: 8px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .book-title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: #232323;
+    margin: 5px 0;
+    white-space: wrap;
 }
 
 .book-author,
 .book-genre,
 .book-price {
-    font-size: 11px;
+    font-size: 13px;
     color: #4f4d4d;
-    margin: 3px;
+    margin: 4px 0;
 }
 
 .book-actions {
-    margin-top: 10px;
+    margin-top: auto; /* Push buttons to bottom */
     display: flex;
     justify-content: center;
     gap: 10px;
 }
+
 .buy-now,
 .add-to-cart {
-    flex: .7;
-    padding: 5px;
-    font-size: 10px;
+    flex: 1;
+    padding: 10px;
+    font-size: 12px;
     border: none;
     cursor: pointer;
     border-radius: 8px;
@@ -64,7 +70,6 @@
 .buy-now {
     background: #ff4d4d;
     color: white;
-    margin-right: 3px;
 }
 
 .buy-now:hover {
